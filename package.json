@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Signup, Login, Reset, Authroization, Token",
   "main": "./dist/main.js",
-  "files":[
+  "files": [
     "/dist"
   ],
   "scripts": {
@@ -23,5 +23,13 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.1.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "sqlite3": "^3.1.8"
   }
 }
