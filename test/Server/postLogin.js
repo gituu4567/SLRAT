@@ -19,6 +19,14 @@ describe('postLogin', () => {
     }
   }
   let credential = {email: 'test@email.host', password: 'testshouldhavenone'}
+  let loginReq = {
+    method: 'POST',
+    uri: `http://localhost:${config.server.port}/login`,
+    form: credential,
+    followRedirect: false,
+    simple: false,
+    resolveWithFullResponse: true
+  }
   let server
 
   beforeEach(() => {
@@ -34,17 +42,22 @@ describe('postLogin', () => {
   })
 
   it('should respond 401 when credential does not match', () => {
-    let loginReq = {
-      method: 'POST',
-      uri: `http://localhost:${config.server.port}/login`,
-      form: credential,
-      followRedirect: false,
-      simple: false,
-      resolveWithFullResponse: true
-    }
     return request(loginReq)
     .then((response) => {
       assert.equal(response.statusCode, 401)
+    })
+  })
+  it('should redirect to / when credential is authenticated', () => {
+    return server.createUser(credential)
+    .then(() => {
+      return request(loginReq)
+    })
+    .then((response) => {
+      assert.equal(response.statusCode, 302)
+      assert.equal(response.headers.location, '/')
+    })
+    .catch((error) => {
+      throw new Error(error)
     })
   })
 })

@@ -6,8 +6,8 @@ describe('Database', () => {
   require('./Database/authCode.js')
 })
 
-describe.only('Server', () => {
-  // require('./Server/init.js')
-  // require('./Server/getRoot.js')
+describe('Server', () => {
+  require('./Server/init.js')
+  require('./Server/getRoot.js')
   require('./Server/postLogin.js')
 })
