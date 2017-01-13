@@ -10,4 +10,5 @@ describe('Server', () => {
   require('./Server/init.js')
   require('./Server/getRoot.js')
   require('./Server/postLogin.js')
+  require('./Server/postRegister.js')
 })
