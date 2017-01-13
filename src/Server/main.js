@@ -8,6 +8,7 @@ import getRoot from './getRoot.js'
 import postLogin from './postLogin.js'
 import postRegister from './postRegister.js'
 import getAuthorization from './getAuthorization.js'
+import postToken from './postToken.js'
 
 class Server extends Database {
   constructor (config) {
@@ -40,47 +41,10 @@ class Server extends Database {
       this.endPoint.get('/', getRoot.bind(this))
       this.endPoint.post('/login', formParser, postLogin.bind(this))
       this.endPoint.post('/register', formParser, postRegister.bind(this))
-      this.endPoint.get('/authorization', formParser, getAuthorization.bind(this))
+      this.endPoint.get('/authorization', getAuthorization.bind(this))
+      this.endPoint.post('/token', postToken.bind(this))
     })
   }
 }
-
-// import onRegister from './lib/onRegister.js'
-// import onAuthorization from './lib/onAuthorization.js'
-// import onLogin from './lib/onLogin.js'
-// import onToken from './lib/onToken.js'
-
-// class Server {
-//   constructor (config) {
-//     this.config = config
-//     this.api = express()
-//     this.server = require('http').createServer(this.api)
-//   }
-//
-//   init () {
-//     // let sessionConfig = {
-//     //   secret: this.sessionSecret,
-//     //   resave: false,
-//     //   saveUninitialized: true,
-//     //   cookie: {}
-//     // }
-//     this.api.use(session(this.config.session))
-//
-//     // this.onRegister = onRegister.bind(this)
-//     // this.onLogin = onLogin.bind(this)
-//     // this.onAuthorization = onAuthorization.bind(this)
-//     // this.onToken = onToken.bind(this)
-//
-//     this.api.get('/', (req, res) => {
-//       let response = req.session.user || 'no user'
-//       res.send(response)
-//     })
-//
-//     // this.api.get('/login', (req, res) => {
-//     //   res.sendFile(path.resolve('./node_modules/loginPage/index.html'))
-//     // })
-//   }
-//
-// }
 
 export default Server
