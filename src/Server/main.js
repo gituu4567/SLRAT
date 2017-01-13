@@ -7,6 +7,7 @@ import Database from '../Database/main.js'
 import getRoot from './getRoot.js'
 import postLogin from './postLogin.js'
 import postRegister from './postRegister.js'
+import getAuthorization from './getAuthorization.js'
 
 class Server extends Database {
   constructor (config) {
@@ -39,6 +40,7 @@ class Server extends Database {
       this.endPoint.get('/', getRoot.bind(this))
       this.endPoint.post('/login', formParser, postLogin.bind(this))
       this.endPoint.post('/register', formParser, postRegister.bind(this))
+      this.endPoint.get('/authorization', formParser, getAuthorization.bind(this))
     })
   }
 }

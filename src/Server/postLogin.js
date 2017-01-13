@@ -2,6 +2,7 @@ function postLogin (request, response) {
   let credential = request.body
   this.authenticate(credential)
   .then(() => {
+    request.session.user = credential.email
     response.redirect(302, '/')
   })
   .catch((error) => {
