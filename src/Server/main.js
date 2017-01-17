@@ -36,6 +36,11 @@ class Server extends Database {
   }
 
   listenOnEndPoint () {
+    this.endPoint.use(function (req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*')
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+      next()
+    })
     this.endPoint.use(session(this.config.session))
     return this.createTables()
     .then(() => {
