@@ -8,7 +8,7 @@ function getAuthorization (request, response) {
     let clientId = request.query.client_id
     let authCode = base32.sha1(`${timestamp}&${username}/${clientId}`)
     this.storeAuthCode(authCode)
-    return response.redirect(302, `${request.query.redirect_uri}&code=${authCode}`)
+    return response.redirect(302, `${request.query.redirect_uri}?code=${authCode}`)
   }
 }
 
