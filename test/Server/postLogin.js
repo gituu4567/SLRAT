@@ -60,4 +60,16 @@ describe('postLogin', () => {
       throw new Error(error)
     })
   })
+  it('should redirect to /authorization if "redirect_uri paramenter" is present', () => {
+    let clientRedirect = 'http://www.client.com/service?with=value'
+    loginReq.uri = `http://localhost:${config.server.port}/login?redirect_uri=${encodeURIComponent(clientRedirect)}`
+    return server.createUser(credential)
+    .then(() => {
+      return request(loginReq)
+    })
+    .then((response) => {
+      assert.equal(response.statusCode, 302)
+      assert.equal(response.headers.location, `/authorization?redirect_uri=${clientRedirect}`)
+    })
+  })
 })
