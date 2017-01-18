@@ -59,11 +59,11 @@ describe('getAuthorization', () => {
     return server.stop()
   })
 
-  it('should redirect to loginPage when user is not authenticated', () => {
+  it('should redirect to loginPage with parameters when user is not authenticated', () => {
     return request(authorizationReq)
     .then((response) => {
       assert.equal(response.statusCode, 302)
-      assert.equal(response.headers.location, '/login')
+      assert.equal(response.headers.location, `/login${authorizationQuery}`)
     })
   })
   it('should redirect with authorization code when user is logged in', () => {
