@@ -26,16 +26,18 @@ describe('authentication', () => {
       assert.equal(error.message, 'no user table found')
     })
   })
-  it('createUser should add credential into users table', () => {
+  it('createUser should add an inactive credential into users table', () => {
     return database.createTables()
     .then((status) => {
       return database.createUser(credential)
     })
     .then((status) => {
       assert(status)
-      return database.get(`SELECT email, password FROM users`)
+      return database.get(`SELECT email, password, active FROM users`)
     })
     .then((row) => {
+      assert.equal(row.active, 0)
+      delete row.active
       assert.deepEqual(row, credential)
     })
     .catch((error) => {
@@ -67,7 +69,7 @@ describe('authentication', () => {
       assert.equal(error.message, 'credential does not match')
     })
   })
-  it('authenticate should resolve if credential match', () => {
+  it('authenticate should resolve if credential match and user is active', () => {
     return database.createTables()
     .then(() => {
       return database.createUser(credential)

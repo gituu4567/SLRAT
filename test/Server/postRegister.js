@@ -28,13 +28,26 @@ describe('postRegister', () => {
     return server.stop()
   })
 
-  it('should generate activation code')
-  it('should send a email with activation code')
-
   it('should respond 200 on successful user creation', () => {
     return request(registerReq)
     .then((response) => {
       assert(response.statusCode, 200)
     })
   })
+
+  it('should store an activation code', () => {
+    return request(registerReq)
+    .then((response) => {
+      assert(response.statusCode, 200)
+      return server.get(`SELECT * from activationcodes`)
+    })
+    .then((row) => {
+      assert(row)
+    })
+    .catch((error) => {
+      throw new Error(error)
+    })
+  })
+
+  it('should send an email with activation code')
 })
