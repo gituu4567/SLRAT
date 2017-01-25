@@ -50,6 +50,9 @@ describe('postLogin', () => {
   it('should redirect to / when credential is authenticated', () => {
     return server.createUser(credential)
     .then(() => {
+      return server.activateUser(credential.email)
+    })
+    .then(() => {
       return request(loginReq)
     })
     .then((response) => {
@@ -64,6 +67,9 @@ describe('postLogin', () => {
     let clientRedirect = 'http://www.client.com/service?with=value'
     loginReq.uri = `http://localhost:${config.server.port}/login?redirect_uri=${encodeURIComponent(clientRedirect)}`
     return server.createUser(credential)
+    .then(() => {
+      return server.activateUser(credential.email)
+    })
     .then(() => {
       return request(loginReq)
     })

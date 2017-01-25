@@ -69,6 +69,9 @@ describe('getAuthorization', () => {
   it('should redirect with authorization code when user is logged in', () => {
     return server.createUser(credential)
     .then(() => {
+      return server.activateUser(credential.email)
+    })
+    .then(() => {
       return request(loginReq)
     })
     .then((response) => {

@@ -4,7 +4,7 @@ const request = require('request-promise')
 import Server from '../../src/Server/main.js'
 
 import config from './config.js'
-describe.only('postRegister', () => {
+describe('postRegister', () => {
   let credential = {email: 'test@email.host', password: 'testshouldhavenone'}
   let registerReq = {
     method: 'POST',

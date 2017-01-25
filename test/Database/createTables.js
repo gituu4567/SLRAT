@@ -33,4 +33,7 @@ describe('createTables', () => {
   it('should create authcodes table', () => {
     assert(tables.find((v) => v.name === 'authcodes'))
   })
+  it('should create activationcodes table', () => {
+    assert(tables.find((v) => v.name === 'activationcodes'))
+  })
 })

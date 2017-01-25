@@ -20,7 +20,7 @@ describe('authentication', () => {
     database.close()
   })
 
-  it('createUser should throw error when no "user" table is found', () => {
+  it('createUser should throw error when "user" table is not found', () => {
     return database.createUser(credential)
     .catch((error) => {
       assert.equal(error.message, 'no user table found')
@@ -42,6 +42,22 @@ describe('authentication', () => {
       throw new Error(error)
     })
   })
+
+  it('authenticate should reject if user is not activated', () => {
+    return database.createTables()
+    .then(() => {
+      return database.createUser(credential)
+    })
+    .then(() => {
+      return database.authenticate(credential)
+    })
+    .then((user) => {
+      assert(user, credential.username)
+    })
+    .catch((error) => {
+      assert.equal(error.message, 'user is not active')
+    })
+  })
   it('authenticate should reject if credential does not match', () => {
     return database.createTables()
     .then(() => {
@@ -55,6 +71,9 @@ describe('authentication', () => {
     return database.createTables()
     .then(() => {
       return database.createUser(credential)
+    })
+    .then(() => {
+      return database.activateUser(credential.email)
     })
     .then(() => {
       return database.authenticate(credential)
