@@ -1,6 +1,7 @@
 var sqlite3 = require('sqlite3').verbose()
 
 import {addValidUser, allowThisUser} from './validateUser.js'
+import { storeActivationCode, verifyActivation } from './activation.js'
 import {createUser, activateUser, authenticate} from './authenticateUser.js'
 import {storeAuthCode, verifyAuthCode} from './authCode.js'
 
@@ -50,6 +51,8 @@ class database {
 database.prototype.addValidUser = addValidUser
 database.prototype.allowThisUser = allowThisUser
 database.prototype.createUser = createUser
+database.prototype.storeActivationCode = storeActivationCode
+database.prototype.verifyActivation = verifyActivation
 database.prototype.activateUser = activateUser
 database.prototype.authenticate = authenticate
 database.prototype.storeAuthCode = storeAuthCode

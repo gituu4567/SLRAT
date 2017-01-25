@@ -2,6 +2,7 @@
 describe('Database', () => {
   require('./Database/createTables.js')
   require('./Database/validateUser.js')
+  require('./Database/activation.js')
   require('./Database/authenticateUser.js')
   require('./Database/authCode.js')
 })
