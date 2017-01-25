@@ -3,21 +3,8 @@ const assert = require('assert')
 const request = require('request-promise')
 import Server from '../../src/Server/main.js'
 
-describe('postRegister', () => {
-  let config = {
-    database: {
-      filename: ':memory:'
-    },
-    server: {
-      port: 3000,
-      session: {
-        secret: 'the answer is 42',
-        resave: false,
-        saveUninitialized: true,
-        cookie: {}
-      }
-    }
-  }
+import config from './config.js'
+describe.only('postRegister', () => {
   let credential = {email: 'test@email.host', password: 'testshouldhavenone'}
   let registerReq = {
     method: 'POST',
@@ -40,6 +27,9 @@ describe('postRegister', () => {
   afterEach(() => {
     return server.stop()
   })
+
+  it('should generate activation code')
+  it('should send a email with activation code')
 
   it('should respond 200 on successful user creation', () => {
     return request(registerReq)
