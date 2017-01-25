@@ -27,7 +27,6 @@
     "request-promise": "^4.1.1"
   },
   "dependencies": {
-    "base32": "0.0.6",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-session": "^1.14.2",

@@ -9,15 +9,15 @@ describe('createTables', () => {
   let database
   let tables
 
-  before(() => {
+  before((done) => {
     database = new Database(config)
-    return database.createTables()
+    database.createTables()
     .then(() => {
       let db = database.instance
       db.all('SELECT name FROM sqlite_master WHERE type="table"', (err, rows) => {
         if (err) throw err
         tables = rows
-        return Promise.resolve(true)
+        done()
       })
     })
   })
