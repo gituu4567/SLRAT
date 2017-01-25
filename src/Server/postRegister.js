@@ -10,7 +10,7 @@ function postRegister (request, response) {
     hash.update(`${timestamp}/${randomBytes}`)
     let activationCode = hash.digest('hex')
 
-    return this.storeActivationCode(activationCode)
+    return this.storeActivationCode(activationCode, credential.email)
   })
   .then(() => {
     response.redirect(200)

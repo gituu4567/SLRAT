@@ -12,6 +12,7 @@ describe('Server', () => {
   require('./Server/getRoot.js')
   require('./Server/postLogin.js')
   require('./Server/postRegister.js')
+  require('./Server/getActivate.js')
   require('./Server/getAuthorization.js')
   require('./Server/postToken.js')
 })

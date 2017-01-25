@@ -1,5 +1,4 @@
 const express = require('express')
-// const path = require('path')
 const session = require('express-session')
 const formParser = require('body-parser').urlencoded({ extended: false })
 
@@ -7,6 +6,7 @@ import Database from '../Database/main.js'
 import getRoot from './getRoot.js'
 import postLogin from './postLogin.js'
 import postRegister from './postRegister.js'
+import getActivate from './getActivate.js'
 import getAuthorization from './getAuthorization.js'
 import postToken from './postToken.js'
 
@@ -21,6 +21,7 @@ class Server extends Database {
   start () {
     return new Promise((resolve, reject) => {
       this.server.listen(this.config.port, () => {
+        // TODO: this is problematic
         // console.log(`server listening on port ${this.config.port}`)
         resolve(true)
       })
@@ -47,6 +48,7 @@ class Server extends Database {
       this.endPoint.get('/', getRoot.bind(this))
       this.endPoint.post('/login', formParser, postLogin.bind(this))
       this.endPoint.post('/register', formParser, postRegister.bind(this))
+      this.endPoint.get('/activate', formParser, getActivate.bind(this))
       this.endPoint.get('/authorization', getAuthorization.bind(this))
       this.endPoint.post('/token', postToken.bind(this))
     })
