@@ -8,6 +8,7 @@ describe('activation', () => {
   }
   let database
   let code = 'takethecodeandbehappy'
+  let email = 'wannabe@happy.com'
 
   beforeEach(() => {
     database = new Database(config)
@@ -17,8 +18,8 @@ describe('activation', () => {
     database.close()
   })
 
-  it('storeActivationCode() should throw error when no "activationcodes" table is found', () => {
-    return database.storeActivationCode(code)
+  it('storeActivationCode() should throw error when "activationcodes" table is not found', () => {
+    return database.storeActivationCode(code, email)
     .catch((error) => {
       assert.equal(error.message, 'no activationcodes table found')
     })
@@ -27,7 +28,7 @@ describe('activation', () => {
   it('storeActivationCode() should add a code record', () => {
     return database.createTables()
     .then(() => {
-      return database.storeActivationCode(code)
+      return database.storeActivationCode(code, email)
     })
     .then(() => {
       return database.get(`SELECT * FROM activationcodes WHERE code='${code}'`)
@@ -50,16 +51,16 @@ describe('activation', () => {
     })
   })
 
-  it('verifyActivation() should resolve if code is found', () => {
+  it('verifyActivation() should resolve email if code is found', () => {
     return database.createTables()
     .then(() => {
-      return database.storeActivationCode(code)
+      return database.storeActivationCode(code, email)
     })
     .then(() => {
       return database.verifyActivation(code)
     })
     .then((result) => {
-      assert(result)
+      assert.equal(result, email)
     })
     .catch((error) => {
       throw new Error(error)

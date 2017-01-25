@@ -1,5 +1,5 @@
-function storeActivationCode (code) {
-  let query = `INSERT INTO activationcodes (code) VALUES ('${code}')`
+function storeActivationCode (code, email) {
+  let query = `INSERT INTO activationcodes (code, email) VALUES ('${code}','${email}')`
 
   return this.exec(query)
   .then((result) => {
@@ -13,14 +13,14 @@ function storeActivationCode (code) {
 }
 
 function verifyActivation (code) {
-  let query = `SELECT * FROM activationcodes WHERE code='${code}'`
+  let query = `SELECT email FROM activationcodes WHERE code='${code}'`
 
   return new Promise((resolve, reject) => {
     this.database.get(query, (error, row) => {
       if (error) reject(error)
       if (!error) {
         if (row === undefined) reject(new Error('activation code not found'))
-        if (row) resolve(true)
+        if (row) resolve(row.email)
       }
     })
   })
