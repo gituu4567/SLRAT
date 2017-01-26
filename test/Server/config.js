@@ -12,7 +12,8 @@ let config = {
     },
     token: {
       secret: 'token is short'
-    }
+    },
+    userLimiter: [/@email.com$/]
   }
 }
 

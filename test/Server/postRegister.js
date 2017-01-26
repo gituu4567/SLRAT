@@ -5,7 +5,7 @@ import Server from '../../src/Server/main.js'
 
 import config from './config.js'
 describe('postRegister', () => {
-  let credential = {email: 'test@email.host', password: 'testshouldhavenone'}
+  let credential = {email: 'test@email.com', password: 'testshouldhavenone'}
   let registerReq = {
     method: 'POST',
     uri: `http://localhost:${config.server.port}/register`,
@@ -31,7 +31,7 @@ describe('postRegister', () => {
   it('should respond 200 on successful user creation', () => {
     return request(registerReq)
     .then((response) => {
-      assert(response.statusCode, 200)
+      assert.equal(response.statusCode, 200)
     })
   })
 
@@ -46,6 +46,16 @@ describe('postRegister', () => {
     })
     .catch((error) => {
       throw new Error(error)
+    })
+  })
+
+  // TODO: should be able to omit userLimiter in config
+  it('should respond 403 if email is not allowed to register', () => {
+    let badRegisterReq = Object.assign({}, registerReq)
+    badRegisterReq.form = {email: 'iam@bad.com', password: 'password'}
+    return request(badRegisterReq)
+    .then((response) => {
+      assert.equal(response.statusCode, 403)
     })
   })
 
