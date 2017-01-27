@@ -1,4 +1,8 @@
 /* eslint-env mocha */
+describe('Mailer', () => {
+  // require('./Mailer/main.js') // dont want to spam any one yet
+})
+
 describe('Database', () => {
   require('./Database/createTables.js')
   require('./Database/validateUser.js')
