@@ -9,6 +9,7 @@ describe('Database', () => {
   require('./Database/activation.js')
   require('./Database/authenticateUser.js')
   require('./Database/authCode.js')
+  require('./Database/resetCode.js')
 })
 
 describe('Server', () => {

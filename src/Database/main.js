@@ -4,6 +4,7 @@ import {addValidUser, allowThisUser} from './validateUser.js'
 import { storeActivationCode, verifyActivation } from './activation.js'
 import {createUser, activateUser, authenticate} from './authenticateUser.js'
 import {storeAuthCode, verifyAuthCode} from './authCode.js'
+import { storeResetCode, verifyResetCode } from './resetCode.js'
 
 class database {
   constructor (config) {
@@ -43,6 +44,7 @@ class database {
       CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, active INTEGER NOT NULL);
       CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL);
       CREATE TABLE activationcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
+      CREATE TABLE resetcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
     `
     return this.exec(query)
   }
@@ -57,5 +59,7 @@ database.prototype.activateUser = activateUser
 database.prototype.authenticate = authenticate
 database.prototype.storeAuthCode = storeAuthCode
 database.prototype.verifyAuthCode = verifyAuthCode
+database.prototype.storeResetCode = storeResetCode
+database.prototype.verifyResetCode = verifyResetCode
 
 export default database
