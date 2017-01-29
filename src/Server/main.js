@@ -9,6 +9,7 @@ import postRegister from './postRegister.js'
 import getActivate from './getActivate.js'
 import getAuthorization from './getAuthorization.js'
 import postToken from './postToken.js'
+import postNewPassword from './postNewPassword.js'
 
 class Server extends Database {
   constructor (config) {
@@ -51,6 +52,7 @@ class Server extends Database {
       this.endPoint.get('/activate', formParser, getActivate.bind(this))
       this.endPoint.get('/authorization', getAuthorization.bind(this))
       this.endPoint.post('/token', postToken.bind(this))
+      this.endPoint.post('/newpassword', formParser, postNewPassword.bind(this))
     })
   }
 }

@@ -4,7 +4,7 @@ import {addValidUser, allowThisUser} from './validateUser.js'
 import { storeActivationCode, verifyActivation } from './activation.js'
 import {createUser, activateUser, authenticate} from './authenticateUser.js'
 import {storeAuthCode, verifyAuthCode} from './authCode.js'
-import { storeResetCode, verifyResetCode } from './resetCode.js'
+import { storeResetCode, verifyResetCode, changePassword } from './resetCode.js'
 
 class database {
   constructor (config) {
@@ -61,5 +61,6 @@ database.prototype.storeAuthCode = storeAuthCode
 database.prototype.verifyAuthCode = verifyAuthCode
 database.prototype.storeResetCode = storeResetCode
 database.prototype.verifyResetCode = verifyResetCode
+database.prototype.changePassword = changePassword
 
 export default database

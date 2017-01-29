@@ -15,15 +15,26 @@ function storeResetCode (code, email) {
 function verifyResetCode (code) {
   let query = `SELECT email FROM resetcodes WHERE code='${code}'`
 
-  return new Promise((resolve, reject) => {
-    this.database.get(query, (error, row) => {
-      if (error) reject(error)
-      if (!error) {
-        if (row === undefined) reject(new Error('reset code not found'))
-        if (row) resolve(row.email)
-      }
-    })
+  return this.get(query)
+  .then((row) => {
+    if (row === undefined) return Promise.reject(new Error('reset code not found'))
+    return Promise.resolve(row.email)
+  })
+  .catch((error) => {
+    return Promise.reject(error)
   })
 }
 
-export {storeResetCode, verifyResetCode}
+function changePassword (email, password) {
+  let query = `UPDATE users SET password='${password}' WHERE email='${email}'`
+
+  return this.exec(query)
+  .then((result) => {
+    return Promise.resolve(result)
+  })
+  .catch((error) => {
+    return Promise.reject(new Error(error))
+  })
+}
+
+export {storeResetCode, verifyResetCode, changePassword}
