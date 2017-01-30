@@ -13,7 +13,7 @@ class Mailer {
       to: address,
       subject: 'Account Activation',
       text: `please visit this address ${this.hostname}/activate?code=${code}`,
-      html: `<b>please visit this address ${this.hostname}/activate?code=${code}</b>`
+      html: `<b>please visit this address <a href=${this.hostname}/activate?code=${code}>${this.hostname}/activate?code=${code}</a></b>`
     }
     return new Promise((resolve, reject) => {
       this.transporter.sendMail(mailOptions, (error, info) => {
@@ -28,8 +28,8 @@ class Mailer {
       from: this.sender,
       to: address,
       subject: 'Password Reset',
-      text: `please visit this address http://${this.hostname}/reset?code=${code}`,
-      html: `<b>please visit this address http://${this.hostname}/reset?code=${code}</b>`
+      text: `please visit this address http://${this.hostname}/newpassword?code=${code}`,
+      html: `<b>please visit this address <a href=http://${this.hostname}/newpassword?code=${code}>http://${this.hostname}/newpassword?code=${code}</a></b>`
     }
 
     return new Promise((resolve, reject) => {
