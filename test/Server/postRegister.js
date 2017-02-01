@@ -28,7 +28,7 @@ describe('postRegister', () => {
     return server.stop()
   })
 
-  it('should respond 200 on successful user creation', () => {
+  it.only('should respond 200 on successful user creation', () => {
     return request(registerReq)
     .then((response) => {
       assert.equal(response.statusCode, 200)

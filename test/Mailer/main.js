@@ -2,7 +2,7 @@
 const assert = require('assert')
 import Mailer from '../../src/Mailer/main.js'
 
-describe.only('send mail', () => {
+describe('send mail', () => {
   it('should work', () => {
     let transport = 'smtps://user:password@smtp.server.com'
     let sender = '"sender" <account@server.com>'

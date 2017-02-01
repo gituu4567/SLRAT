@@ -13,7 +13,10 @@ let config = {
     token: {
       secret: 'token is short'
     },
-    userLimiter: [/@email.com$/]
+    userLimiter: [/@email.com$/],
+    transport: 'smtps://username:password@smtp.server.com',
+    sender: '"name" <sender@server.com>',
+    hostname: 'http://service.com'
   }
 }
 
