@@ -3,7 +3,7 @@ function postNewPassword (request, response) {
   if (!resetCode) return response.sendStatus(401)
   this.verifyResetCode(resetCode)
   .then((email) => {
-    return this.changePassword(email, request.query.password)
+    return this.changePassword(email, request.body.password)
   })
   .then(() => {
     response.sendStatus(200)

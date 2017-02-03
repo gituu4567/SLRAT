@@ -2,7 +2,7 @@ const crypto = require('crypto')
 import Mailer from '../Mailer/main.js'
 
 function postReset (request, response) {
-  let email = request.email
+  let email = request.body.email
   let mailer = new Mailer(this.config.transport, this.config.sender, this.config.hostname)
   let resetCode
 
@@ -20,10 +20,11 @@ function postReset (request, response) {
     return mailer.sendReset(email, resetCode)
   })
   .then(() => {
-    response.sendStatus(200)
+    return response.sendStatus(200)
   })
   .catch((error) => {
-    response.sendStatus(error)
+    if (error.message === 'email is not found') return response.sendStatus(401)
+    return response.status(500).send(error)
   })
 }
 
