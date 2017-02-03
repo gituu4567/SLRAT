@@ -32,4 +32,17 @@ function activateUser (user) {
   return this.exec(query)
 }
 
-export {createUser, activateUser, authenticate}
+function validateEmail (email) {
+  let query = `SELECT email FROM users WHERE email='${email}'`
+
+  return this.get(query)
+  .then((row) => {
+    if (row === undefined) return Promise.reject(new Error('email is not found'))
+    return Promise.resolve(row.email)
+  })
+  .catch((error) => {
+    return Promise.reject(error)
+  })
+}
+
+export {createUser, activateUser, authenticate, validateEmail}

@@ -87,4 +87,6 @@ describe('authentication', () => {
       throw new Error(error)
     })
   })
+  it('validateEmail should reject no email is found')
+  it('validateEmail should resolve if email is found')
 })
