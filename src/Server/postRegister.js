@@ -24,10 +24,10 @@ function postRegister (request, response) {
     return mailer.sendActivation(credential.email, activationCode)
   })
   .then(() => {
-    response.sendStatus(200)
+    response.status(200).send('activation link has been sent to your email')
   })
   .catch((error) => {
-    response.send(error.message)
+    response.status(500).send(error.message)
   })
 }
 

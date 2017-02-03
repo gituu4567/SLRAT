@@ -35,9 +35,9 @@ function postRegister(request, response) {
   }).then(function () {
     return mailer.sendActivation(credential.email, activationCode);
   }).then(function () {
-    response.sendStatus(200);
+    response.status(200).send('activation link has been sent to your email');
   }).catch(function (error) {
-    response.send(error.message);
+    response.status(500).send(error.message);
   });
 }
 

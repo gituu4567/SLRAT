@@ -6,10 +6,10 @@ function postNewPassword (request, response) {
     return this.changePassword(email, request.body.password)
   })
   .then(() => {
-    response.sendStatus(200)
+    response.status(200).send('your password has been changed')
   })
   .catch((error) => {
-    console.log(error)
+    response.status(500).send(error.message)
   })
 }
 

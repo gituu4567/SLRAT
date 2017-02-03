@@ -1,6 +1,7 @@
 function getRoot (request, response) {
-  let page = request.session.user || 'no user'
-  response.send(page)
+  let user = request.session.user
+  if (user) return response.status(200).send(`you are logged in as ${user}`)
+  return response.status(200).send(`you are not logged in`)
 }
 
 export default getRoot

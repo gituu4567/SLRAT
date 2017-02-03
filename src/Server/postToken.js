@@ -9,7 +9,7 @@ function postToken (request, response) {
     response.send(token)
   })
   .catch((error) => {
-    if (error.message === 'authorization code not found') return response.sendStatus(401)
+    if (error.message === 'authorization code not found') return response.status(401).send('authorization code is not found')
     return response.status(500).send(error.message)
   })
 }

@@ -14,7 +14,7 @@ var Mailer = function () {
   function Mailer(smtps, sender, hostname) {
     _classCallCheck(this, Mailer);
 
-    this.transporter = nodemailer.createTransport(smtps);
+    this.transport = nodemailer.createTransport(smtps);
     this.sender = sender;
     this.hostname = hostname;
   }
@@ -32,7 +32,7 @@ var Mailer = function () {
         html: '<b>please visit this address <a href=' + this.hostname + '/activate?code=' + code + '>' + this.hostname + '/activate?code=' + code + '</a></b>'
       };
       return new Promise(function (resolve, reject) {
-        _this.transporter.sendMail(mailOptions, function (error, info) {
+        _this.transport.sendMail(mailOptions, function (error, info) {
           if (error) reject(error);
           resolve(info);
         });
@@ -48,11 +48,11 @@ var Mailer = function () {
         to: address,
         subject: 'Password Reset',
         text: 'please visit this address http://' + this.hostname + '/newpassword?code=' + code,
-        html: '<b>please visit this address <a href=http://' + this.hostname + '/newpassword?code=' + code + '>http://' + this.hostname + '/newpassword?code=' + code + '</a></b>'
+        html: '<b>please visit this address <a href=' + this.hostname + '/newpassword?code=' + code + '>http://' + this.hostname + '/newpassword?code=' + code + '</a></b>'
       };
 
       return new Promise(function (resolve, reject) {
-        _this2.transporter(mailOptions, function (error, info) {
+        _this2.transport.sendMail(mailOptions, function (error, info) {
           if (error) reject(error);
           resolve(info);
         });

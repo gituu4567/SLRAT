@@ -14,7 +14,7 @@ function postToken(request, response) {
     var token = jwt.sign({ exp: Math.floor(Date.now() / 1000) + 60 * 60 }, _this.config.token.secret);
     response.send(token);
   }).catch(function (error) {
-    if (error.message === 'authorization code not found') return response.sendStatus(401);
+    if (error.message === 'authorization code not found') return response.status(401).send('authorization code is not found');
     return response.status(500).send(error.message);
   });
 }

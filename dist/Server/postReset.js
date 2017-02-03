@@ -16,7 +16,7 @@ var crypto = require('crypto');
 function postReset(request, response) {
   var _this = this;
 
-  var email = request.email;
+  var email = request.body.email;
   var mailer = new _main2.default(this.config.transport, this.config.sender, this.config.hostname);
   var resetCode = void 0;
 
@@ -31,9 +31,10 @@ function postReset(request, response) {
   }).then(function () {
     return mailer.sendReset(email, resetCode);
   }).then(function () {
-    response.sendStatus(200);
+    return response.status(200).send('reset link has been sent to your email');
   }).catch(function (error) {
-    response.sendStatus(error);
+    if (error.message === 'email is not found') return response.status(401).send('email is not registered');
+    return response.status(500).send(error.messsage);
   });
 }
 

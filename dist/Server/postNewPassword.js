@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,11 +9,11 @@ function postNewPassword(request, response) {
   var resetCode = request.query.code;
   if (!resetCode) return response.sendStatus(401);
   this.verifyResetCode(resetCode).then(function (email) {
-    return _this.changePassword(email, request.query.password);
+    return _this.changePassword(email, request.body.password);
   }).then(function () {
-    response.sendStatus(200);
+    response.status(200).send('your password has been changed');
   }).catch(function (error) {
-    console.log(error);
+    response.status(500).send(error.message);
   });
 }
 

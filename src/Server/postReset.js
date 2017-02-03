@@ -20,11 +20,11 @@ function postReset (request, response) {
     return mailer.sendReset(email, resetCode)
   })
   .then(() => {
-    return response.sendStatus(200)
+    return response.status(200).send('reset link has been sent to your email')
   })
   .catch((error) => {
-    if (error.message === 'email is not found') return response.sendStatus(401)
-    return response.status(500).send(error)
+    if (error.message === 'email is not found') return response.status(401).send('email is not registered')
+    return response.status(500).send(error.messsage)
   })
 }
 

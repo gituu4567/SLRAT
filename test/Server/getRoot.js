@@ -39,7 +39,9 @@ describe('getRoot', () => {
     }
     return request(rootReq)
     .then((response) => {
-      assert.equal(response, 'no user')
+      assert.equal(response, 'you are not logged in')
     })
   })
+
+  it('should respond user information when user is logged in')
 })
