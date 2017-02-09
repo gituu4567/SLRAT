@@ -2,6 +2,7 @@
 const assert = require('assert')
 const request = require('request-promise')
 import Server from '../../src/Server/main.js'
+const jwt = require('jsonwebtoken')
 
 import config from './config.js'
 
@@ -20,6 +21,7 @@ describe('postToken', () => {
   })
 
   let authCode = 'IamGivingYouOneShot'
+  let email = 'test@example.com'
 
   let tokenReq = {
     method: 'POST',
@@ -42,6 +44,21 @@ describe('postToken', () => {
     .then((response) => {
       assert.equal(response.statusCode, 200)
       assert(response.body)
+    })
+  })
+  it('should responded jwt with email', () => {
+    return server.storeAuthCode(authCode, email)
+    .then(() => {
+      return request(tokenReq)
+    })
+    .then((response) => {
+      assert.equal(response.statusCode, 200)
+      try {
+        let decoded = jwt.verify(response.body, config.server.token.secret)
+        assert.equal(decoded.email, email)
+      } catch (e) {
+        throw new Error('token is invalid')
+      }
     })
   })
 })
