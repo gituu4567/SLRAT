@@ -14,7 +14,7 @@ function getAuthorization(request, response) {
     var hash = crypto.createHash('sha256');
     hash.update(timestamp + '/' + randomBytes);
     var authCode = hash.digest('hex');
-    this.storeAuthCode(authCode);
+    this.storeAuthCode(authCode, request.session.user);
     var redirection = url.parse(request.query.redirect_uri, true);
     delete redirection.search;
     redirection.query.code = authCode;

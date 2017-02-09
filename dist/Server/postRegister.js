@@ -30,7 +30,6 @@ function postRegister(request, response) {
     var hash = crypto.createHash('sha256');
     hash.update(timestamp + '/' + randomBytes);
     activationCode = hash.digest('hex');
-
     return _this.storeActivationCode(activationCode, credential.email);
   }).then(function () {
     return mailer.sendActivation(credential.email, activationCode);

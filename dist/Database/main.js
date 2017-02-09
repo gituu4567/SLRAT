@@ -62,7 +62,7 @@ var database = function () {
   }, {
     key: 'createTables',
     value: function createTables() {
-      var query = '\n      CREATE TABLE validusers(email TEXT PRIMARY KEY NOT NULL);\n      CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, active INTEGER NOT NULL);\n      CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL);\n      CREATE TABLE activationcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);\n      CREATE TABLE resetcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);\n    ';
+      var query = '\n      CREATE TABLE validusers(email TEXT PRIMARY KEY NOT NULL);\n      CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, active INTEGER NOT NULL);\n      CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);\n      CREATE TABLE activationcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);\n      CREATE TABLE resetcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);\n    ';
       return this.exec(query);
     }
   }, {

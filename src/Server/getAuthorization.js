@@ -9,7 +9,7 @@ function getAuthorization (request, response) {
     let hash = crypto.createHash('sha256')
     hash.update(`${timestamp}/${randomBytes}`)
     let authCode = hash.digest('hex')
-    this.storeAuthCode(authCode)
+    this.storeAuthCode(authCode, request.session.user)
     let redirection = url.parse(request.query.redirect_uri, true)
     delete redirection.search
     redirection.query.code = authCode

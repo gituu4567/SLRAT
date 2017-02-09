@@ -81,11 +81,29 @@ describe('getAuthorization', () => {
     .then((response) => {
       assert.equal(response.statusCode, 302)
       let redirection = url.parse(response.headers.location, true)
+      assert(redirection.query.code)
+      assert.equal(redirection.host, 'www.example.com')
+      assert.equal(redirection.pathname, '/service')
+    })
+  })
+  it('should have stored a valid authorization code', () => {
+    return server.createUser(credential)
+    .then(() => {
+      return server.activateUser(credential.email)
+    })
+    .then(() => {
+      return request(loginReq)
+    })
+    .then((response) => {
+      return request(authorizationReq)
+    })
+    .then((response) => {
+      let redirection = url.parse(response.headers.location, true)
       let authCode = redirection.query.code
       return server.verifyAuthCode(authCode)
     })
     .then((result) => {
-      assert(result)
+      assert.equal(result, credential.email)
     })
     .catch((error) => {
       throw new Error(error)
