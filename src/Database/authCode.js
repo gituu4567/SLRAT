@@ -1,5 +1,5 @@
-function storeAuthCode (code) {
-  let query = `INSERT INTO authcodes (code) VALUES ('${code}')`
+function storeAuthCode (code, email) {
+  let query = `INSERT INTO authcodes (code, email) VALUES ('${code}', '${email}')`
 
   return this.exec(query)
   .then((result) => {
@@ -13,14 +13,14 @@ function storeAuthCode (code) {
 }
 
 function verifyAuthCode (code) {
-  let query = `SELECT * FROM authcodes WHERE code='${code}'`
+  let query = `SELECT email FROM authcodes WHERE code='${code}'`
 
   return new Promise((resolve, reject) => {
     this.database.get(query, (error, row) => {
       if (error) reject(error)
       if (!error) {
         if (row === undefined) reject(new Error('authorization code not found'))
-        if (row) resolve(true)
+        if (row) resolve(row.email)
       }
     })
   })

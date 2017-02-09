@@ -42,7 +42,7 @@ class database {
     let query = `
       CREATE TABLE validusers(email TEXT PRIMARY KEY NOT NULL);
       CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, active INTEGER NOT NULL);
-      CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL);
+      CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
       CREATE TABLE activationcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
       CREATE TABLE resetcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
     `
