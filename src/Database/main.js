@@ -1,20 +1,41 @@
-var sqlite3 = require('sqlite3').verbose()
-
-// import {addValidUser, allowThisUser} from './validateUser.js'
-// import { storeActivationCode, verifyActivation } from './activation.js'
-
-// import {createUser, activateUser, authenticate, validateEmail} from './authenticateUser.js'
-// import {storeAuthCode, verifyAuthCode} from './authCode.js'
-// import { storeResetCode, verifyResetCode, changePassword } from './resetCode.js'
+var r = require('rethinkdb')
 
 class Database {
   constructor (config) {
-    this.database = new sqlite3.Database(config.filename)
+    this.address = config.address
   }
 
-  // mostly for testing
-  get instance () {
-    return this.database
+  connect () {
+    return r.connect(this.address)
+    .then((connection) => {
+      this.connection = connection
+    })
+    .catch((error) => {
+      return Promise.reject(error)
+    })
+  }
+
+  init () {
+    return r.dbCreate('SLRAT').run(this.connection)
+    .then(() => {
+      return r.db('SLRAT').tableCreate('users').run(this.connection)
+    })
+    .then(() => {
+      return r.db('SLRAT').tableCreate('activationcodes').run(this.connection)
+    })
+    .then(() => {
+      return r.db('SLRAT').tableCreate('authcodes').run(this.connection)
+    })
+    .then(() => {
+      return r.db('SLRAT').tableCreate('resetcodes').run(this.connection)
+    })
+    .then(() => {
+      return Promise.resolve(true)
+    })
+    .catch((error) => {
+      if (error.msg === 'Database `SLRAT` already exists.') return Promise.resolve(true)
+      return Promise.reject(error)
+    })
   }
 
   exec (query) {
@@ -37,17 +58,6 @@ class Database {
 
   close (cb) {
     this.database.close(cb)
-  }
-
-  createTables () {
-    let query = `
-      CREATE TABLE validusers(email TEXT PRIMARY KEY NOT NULL);
-      CREATE TABLE users(email TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, active INTEGER NOT NULL);
-      CREATE TABLE authcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
-      CREATE TABLE activationcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
-      CREATE TABLE resetcodes(code TEXT PRIMARY KEY NOT NULL, email TEXT NOT NULL);
-    `
-    return this.exec(query)
   }
 }
 
