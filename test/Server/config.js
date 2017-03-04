@@ -19,5 +19,4 @@ let config = {
     hostname: 'http://service.com'
   }
 }
-
-export default config
+module.exports = config

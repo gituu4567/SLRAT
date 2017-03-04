@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const assert = require('assert')
-import Mailer from '../../src/Mailer/main.js'
+const Mailer = require('../../src/Mailer/main.js')
 
 describe('send mail', () => {
   it('should work', () => {

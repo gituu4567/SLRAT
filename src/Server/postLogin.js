@@ -14,4 +14,4 @@ function postLogin (request, response) {
   })
 }
 
-export default postLogin
+module.exports = postLogin

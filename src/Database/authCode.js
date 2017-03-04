@@ -26,4 +26,4 @@ function verifyAuthCode (code) {
   })
 }
 
-export {storeAuthCode, verifyAuthCode}
+module.exports = {storeAuthCode, verifyAuthCode}

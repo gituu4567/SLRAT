@@ -26,4 +26,4 @@ function verifyActivation (code) {
   })
 }
 
-export {storeActivationCode, verifyActivation}
+module.exports = {storeActivationCode, verifyActivation}

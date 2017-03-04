@@ -10,4 +10,4 @@ function getActivate (request, response) {
   })
 }
 
-export default getActivate
+module.exports = getActivate

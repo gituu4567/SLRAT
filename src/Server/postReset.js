@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-import Mailer from '../Mailer/main.js'
+const Mailer = require('../Mailer/main.js')
 
 function postReset (request, response) {
   let email = request.body.email
@@ -28,4 +28,4 @@ function postReset (request, response) {
   })
 }
 
-export default postReset
+module.exports = postReset

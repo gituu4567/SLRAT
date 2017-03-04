@@ -2,7 +2,7 @@
 const assert = require('assert')
 const request = require('request-promise')
 const url = require('url')
-import Server from '../../src/Server/main.js'
+const Server = require('../../src/Server/main.js')
 
 describe('getAuthorization', () => {
   let config = {

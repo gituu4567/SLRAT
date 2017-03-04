@@ -1,6 +1,6 @@
 /* eslint-env mocha */
-describe.skip('Mailer', () => {
-  require('./Mailer/main.js') // dont want to spam any one yet
+describe.skip('Mailer', () => { // dont want to spam any one yet
+  require('./Mailer/main.js')
 })
 
 describe('Database', () => {

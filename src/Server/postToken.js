@@ -14,4 +14,4 @@ function postToken (request, response) {
   })
 }
 
-export default postToken
+module.exports = postToken

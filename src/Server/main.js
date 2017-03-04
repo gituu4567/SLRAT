@@ -2,15 +2,15 @@ const express = require('express')
 const session = require('express-session')
 const formParser = require('body-parser').urlencoded({ extended: false })
 
-import Database from '../Database/main.js'
-import getRoot from './getRoot.js'
-import postLogin from './postLogin.js'
-import postRegister from './postRegister.js'
-import getActivate from './getActivate.js'
-import getAuthorization from './getAuthorization.js'
-import postToken from './postToken.js'
-import postNewPassword from './postNewPassword.js'
-import postReset from './postReset.js'
+const Database = require('../Database/main.js')
+const getRoot = require('./getRoot.js')
+const postLogin = require('./postLogin.js')
+const postRegister = require('./postRegister.js')
+const getActivate = require('./getActivate.js')
+const getAuthorization = require('./getAuthorization.js')
+const postToken = require('./postToken.js')
+const postNewPassword = require('./postNewPassword.js')
+const postReset = require('./postReset.js')
 
 class Server extends Database {
   constructor (config) {
@@ -59,4 +59,4 @@ class Server extends Database {
   }
 }
 
-export default Server
+module.exports = Server

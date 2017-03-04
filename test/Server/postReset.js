@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 const assert = require('assert')
 const request = require('request-promise')
-import Server from '../../src/Server/main.js'
+const Server = require('../../src/Server/main.js')
 
-import config from './config.js'
+const config = require('./config.js')
 describe('postReset', () => {
   let server
   beforeEach(() => {

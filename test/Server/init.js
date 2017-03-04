@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const assert = require('assert')
-import Server from '../../src/Server/main.js'
+const Server = require('../../src/Server/main.js')
 
 describe('init', () => {
   let config = {

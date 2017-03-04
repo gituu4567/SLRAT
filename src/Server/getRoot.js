@@ -4,4 +4,4 @@ function getRoot (request, response) {
   return response.status(200).send(`you are not logged in`)
 }
 
-export default getRoot
+module.exports = getRoot

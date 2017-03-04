@@ -18,4 +18,4 @@ function getAuthorization (request, response) {
   }
 }
 
-export default getAuthorization
+module.exports = getAuthorization

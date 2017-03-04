@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const assert = require('assert')
-import Database from '../../src/Database/main.js'
+const Database = require('../../src/Database/main.js')
 
 describe('authentication', () => {
   let config = {
@@ -87,6 +87,7 @@ describe('authentication', () => {
       throw new Error(error)
     })
   })
+
   it('validateEmail should reject no email is found')
   it('validateEmail should resolve if email is found')
 })

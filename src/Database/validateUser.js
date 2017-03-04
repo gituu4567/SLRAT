@@ -30,4 +30,4 @@ function allowThisUser (email) {
   }.bind(this))
 }
 
-export {addValidUser, allowThisUser}
+module.exports = {addValidUser, allowThisUser}

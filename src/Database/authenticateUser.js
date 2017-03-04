@@ -45,4 +45,4 @@ function validateEmail (email) {
   })
 }
 
-export {createUser, activateUser, authenticate, validateEmail}
+module.exports = {createUser, activateUser, authenticate, validateEmail}

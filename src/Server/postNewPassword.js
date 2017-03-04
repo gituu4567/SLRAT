@@ -13,4 +13,4 @@ function postNewPassword (request, response) {
   })
 }
 
-export default postNewPassword
+module.exports = postNewPassword

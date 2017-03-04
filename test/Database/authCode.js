@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const assert = require('assert')
-import Database from '../../src/Database/main.js'
+const Database = require('../../src/Database/main.js')
 
 describe('AuthCode', () => {
   let config = {

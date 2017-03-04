@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-import Mailer from '../Mailer/main.js'
+const Mailer = require('../Mailer/main.js')
 
 function postRegister (request, response) {
   let mailer = new Mailer(this.config.transport, this.config.sender, this.config.hostname)
@@ -31,4 +31,4 @@ function postRegister (request, response) {
   })
 }
 
-export default postRegister
+module.exports = postRegister

@@ -37,4 +37,4 @@ function changePassword (email, password) {
   })
 }
 
-export {storeResetCode, verifyResetCode, changePassword}
+module.exports = {storeResetCode, verifyResetCode, changePassword}
