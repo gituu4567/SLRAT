@@ -35,12 +35,15 @@ describe('activation', () => {
 
   it('verifyActivation() should reject if code is not found', () => {
     return database.verifyActivation(code)
+    .then(() => {
+      assert(false)
+    })
     .catch((error) => {
       assert.equal(error.message, 'activation code not found')
     })
   })
 
-  it('storeActivationCode() should resolve true after adding code to table', () => {
+  it('storeActivationCode() should add code to table', () => {
     return database.storeActivationCode(code, email)
     .then((result) => {
       assert(result)
@@ -62,6 +65,9 @@ describe('activation', () => {
 
   it('verifyActivation() should delete this code right after', () => {
     return database.verifyActivation(code)
+    .then(() => {
+      assert(false)
+    })
     .catch((error) => {
       assert.equal(error.message, 'activation code not found')
     })

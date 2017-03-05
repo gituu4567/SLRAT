@@ -1,28 +1,27 @@
-function storeAuthCode (code, email) {
-  let query = `INSERT INTO authcodes (code, email) VALUES ('${code}', '${email}')`
+const r = require('rethinkdb')
 
-  return this.exec(query)
+function storeAuthCode (code, email) {
+  return r.db('SLRAT').table('authcodes').insert({ id: code, email }).run(this.connection)
   .then((result) => {
-    return Promise.resolve(result)
+    if (result.inserted === 1) return Promise.resolve(true)
+    return Promise.reject(new Error('authcode not inserted'))
   })
   .catch((error) => {
-    if (error.message === 'SQLITE_ERROR: no such table: authcodes') {
-      return Promise.reject(new Error('no authcodes table found'))
-    }
+    return Promise.reject(error)
   })
 }
 
 function verifyAuthCode (code) {
-  let query = `SELECT email FROM authcodes WHERE code='${code}'`
-
-  return new Promise((resolve, reject) => {
-    this.database.get(query, (error, row) => {
-      if (error) reject(error)
-      if (!error) {
-        if (row === undefined) reject(new Error('authorization code not found'))
-        if (row) resolve(row.email)
-      }
-    })
+  return r.db('SLRAT').table('authcodes').get(code).run(this.connection)
+  .then((doc) => {
+    if (!doc) return Promise.reject(new Error('authorization code not found'))
+    return r.db('SLRAT').table('authcodes').get(doc.id).delete().run(this.connection)
+  })
+  .then((result) => {
+    if (result.deleted === 1) return Promise.resolve(true)
+  })
+  .catch((error) => {
+    return Promise.reject(error)
   })
 }
 

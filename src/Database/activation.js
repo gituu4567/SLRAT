@@ -17,10 +17,13 @@ function verifyActivation (code) {
     if (!doc) return Promise.reject(new Error('activation code not found'))
     email = doc.email
 
-    return r.db('SLRAT').table('activationcodes').get(code).delete()
+    return r.db('SLRAT').table('activationcodes').get(code).delete().run(this.connection)
   })
-  .then(() => {
-    return Promise.resolve(email)
+  .then((result) => {
+    if (result.deleted === 1) return Promise.resolve(email)
+  })
+  .catch((error) => {
+    return Promise.reject(error)
   })
 }
 

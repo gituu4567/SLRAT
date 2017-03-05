@@ -8,7 +8,7 @@ describe.skip('Mailer', () => { // dont want to spam any one yet
   require('./Mailer/main.js')
 })
 
-describe.only('Database', () => {
+describe('Database', () => {
   // require('./Database/init.js')
   // require('./Database/validateUser.js')
   // require('./Database/activation.js')
@@ -34,8 +34,11 @@ describe.only('Database', () => {
     })
   })
 
-  // require('./Database/createUser.js')
+  require('./Database/createUser.js')
+  require('./Database/authenticateUser.js')
   require('./Database/activation.js')
+  require('./Database/authorization.js')
+  require('./Database/reset.js')
 
   after(() => {
     return r.dbDrop('SLRAT').run(database.connection)

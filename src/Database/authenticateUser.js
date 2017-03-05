@@ -1,46 +1,51 @@
-function createUser (credential) {
-  let query = `INSERT INTO users (email, password, active) VALUES ('${credential.email}', '${credential.password}', 0)`
+const r = require('rethinkdb')
 
-  return this.exec(query)
-  .then((result) => {
+function createUser (credential) {
+  return r.db('SLRAT').table('users').filter({email: credential.email}).count().run(this.connection)
+  .then((count) => {
+    if (count > 0) return Promise.reject(new Error('email is already registered'))
+    let user = Object.assign({}, credential)
+    user.active = false
+    return r.db('SLRAT').table('users').insert(user).run(this.connection)
+  })
+  .then(() => {
     return Promise.resolve(true)
   })
   .catch((error) => {
-    if (error.message === 'SQLITE_ERROR: no such table: users') {
-      return Promise.reject(new Error('no user table found'))
-    }
+    return Promise.reject(error)
   })
 }
 
 function authenticate (credential) {
-  let query = `SELECT email, active From users WHERE email='${credential.email}' AND password='${credential.password}'`
-  return this.get(query)
-  .then((row) => {
-    if (row === undefined) return Promise.reject(new Error('credential does not match'))
-    if (!row.active) return Promise.reject(new Error('user is not active'))
-    return Promise.resolve(row.email)
+  return r.db('SLRAT').table('users').filter(credential)(0).run(this.connection)
+  .then((doc) => {
+    if (!doc.active) return Promise.reject(new Error('user is not active'))
+    return Promise.resolve(true)
   })
   .catch((error) => {
-    if (error.message === 'SQLITE_ERROR: no such table: users') return Promise.reject(new Error('no user table found'))
+    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('credential does not match'))
     return Promise.reject(error)
   })
 }
 
 function activateUser (user) {
-  let query = `UPDATE users SET active=1 WHERE email='${user}'`
-
-  return this.exec(query)
+  return r.db('SLRAT').table('users').filter({email: user})(0).update({active: true}).run(this.connection)
+  .then((result) => {
+    if (result.replaced === 1) return Promise.resolve(true)
+    return Promise.reject(false)
+  })
+  .catch((error) => {
+    return Promise.reject(error)
+  })
 }
 
 function validateEmail (email) {
-  let query = `SELECT email FROM users WHERE email='${email}'`
-
-  return this.get(query)
-  .then((row) => {
-    if (row === undefined) return Promise.reject(new Error('email is not found'))
-    return Promise.resolve(row.email)
+  return r.db('SLRAT').table('users').filter({email})(0).run(this.connection)
+  .then((doc) => {
+    return Promise.resolve(true)
   })
   .catch((error) => {
+    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('email is not registered'))
     return Promise.reject(error)
   })
 }

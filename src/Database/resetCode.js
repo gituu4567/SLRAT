@@ -1,24 +1,26 @@
-function storeResetCode (code, email) {
-  let query = `INSERT INTO resetcodes (code, email) VALUES ('${code}','${email}')`
+const r = require('rethinkdb')
 
-  return this.exec(query)
+function storeResetCode (code, email) {
+  return r.db('SLRAT').table('resetcodes').insert({ id: code, email }).run(this.connection)
   .then((result) => {
-    return Promise.resolve(result)
+    if (result.inserted === 1) return Promise.resolve(true)
+    return Promise.reject(new Error('resetcode not inserted'))
   })
   .catch((error) => {
-    if (error.message === 'SQLITE_ERROR: no such table: activationcodes') {
-      return Promise.reject(new Error('no resetcodes table found'))
-    }
+    return Promise.reject(error)
   })
 }
 
 function verifyResetCode (code) {
-  let query = `SELECT email FROM resetcodes WHERE code='${code}'`
-
-  return this.get(query)
-  .then((row) => {
-    if (row === undefined) return Promise.reject(new Error('reset code not found'))
-    return Promise.resolve(row.email)
+  let email
+  return r.db('SLRAT').table('resetcodes').get(code).run(this.connection)
+  .then((doc) => {
+    if (!doc) return Promise.reject(new Error('reset code not found'))
+    email = doc.email
+    return r.db('SLRAT').table('resetcodes').get(doc.id).delete().run(this.connection)
+  })
+  .then((result) => {
+    if (result.deleted === 1) return Promise.resolve(email)
   })
   .catch((error) => {
     return Promise.reject(error)
@@ -26,14 +28,17 @@ function verifyResetCode (code) {
 }
 
 function changePassword (email, password) {
-  let query = `UPDATE users SET password='${password}' WHERE email='${email}'`
-
-  return this.exec(query)
+  return r.db('SLRAT').table('users').filter({email})(0).run(this.connection)
+  .then((doc) => {
+    return r.db('SLRAT').table('users').get(doc.id).update({password}).run(this.connection)
+  })
   .then((result) => {
-    return Promise.resolve(result)
+    if (result.replaced === 1) return Promise.resolve(true)
+    return Promise.reject('password not updated')
   })
   .catch((error) => {
-    return Promise.reject(new Error(error))
+    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('email is not registered'))
+    return Promise.reject(error)
   })
 }
 
