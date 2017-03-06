@@ -1,47 +1,45 @@
 /* eslint-env mocha */
 const assert = require('assert')
 const request = require('request-promise')
-const Server = require('../../src/Server/main.js')
+// const Server = require('../../src/Server/main.js')
+
+const config = require('./config.js')
+const scenarios = require('../scenarios.js')
 
 describe('getRoot', () => {
-  let config = {
-    database: {
-      filename: ':memory:'
-    },
-    server: {
-      port: 3000,
-      session: {
-        secret: 'the answer is 42',
-        resave: false,
-        saveUninitialized: true,
-        cookie: {}
-      }
-    }
+  let rootReq = {
+    method: 'GET',
+    uri: `http://localhost:${config.server.port}/`
   }
-  let server
-
-  beforeEach(() => {
-    server = new Server(config)
-    return server.listenOnEndPoint()
-    .then(() => {
-      return server.start()
-    })
-  })
-
-  afterEach(() => {
-    return server.stop()
-  })
 
   it('should respond "no user" when user is not logged in', () => {
-    let rootReq = {
-      method: 'GET',
-      uri: `http://localhost:${config.server.port}/`
-    }
     return request(rootReq)
     .then((response) => {
       assert.equal(response, 'you are not logged in')
     })
   })
 
-  it('should respond user information when user is logged in')
+  it('should respond user information when user is logged in', () => {
+    let cookieJar = request.jar()
+    let loginReq = {
+      method: 'POST',
+      uri: `http://localhost:${config.server.port}/login`,
+      form: scenarios.user.credential,
+      followRedirect: false,
+      simple: false,
+      resolveWithFullResponse: true,
+      jar: cookieJar
+    }
+    return request(loginReq)
+    .then(() => {
+      rootReq.jar = cookieJar
+      return request(rootReq)
+    })
+    .then((response) => {
+      assert.equal(response, `you are logged in as ${scenarios.user.credential.email}`)
+    })
+    .catch((error) => {
+      throw new Error(error)
+    })
+  })
 })

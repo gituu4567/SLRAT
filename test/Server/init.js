@@ -2,15 +2,16 @@
 const assert = require('assert')
 const Server = require('../../src/Server/main.js')
 
-describe('init', () => {
-  let config = {
-    database: {
-      filename: ':memory:'
-    }
-  }
+const config = require('./config.js')
+
+describe.only('init', () => {
   let server
   it('should pass', () => {
     server = new Server(config)
-    assert(server)
+    return server.init()
+    .then((result) => {
+      assert(result)
+      assert(server.connection)
+    })
   })
 })

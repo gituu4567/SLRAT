@@ -42,7 +42,7 @@ function activateUser (user) {
 function validateEmail (email) {
   return r.db('SLRAT').table('users').filter({email})(0).run(this.connection)
   .then((doc) => {
-    return Promise.resolve(true)
+    return Promise.resolve(email)
   })
   .catch((error) => {
     if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('email is not registered'))

@@ -1,6 +1,6 @@
 let config = {
   database: {
-    filename: ':memory:'
+    address: 'rethinkdb'
   },
   server: {
     port: 3000,
@@ -13,7 +13,9 @@ let config = {
     token: {
       secret: 'token is short'
     },
-    userLimiter: [/@email.com$/],
+    userLimiter: [/@email.com$/]
+  },
+  mailer: {
     transport: 'smtps://username:password@smtp.server.com',
     sender: '"name" <sender@server.com>',
     hostname: 'http://service.com'

@@ -6,7 +6,10 @@ function getActivate (request, response) {
     return this.activateUser(email)
   })
   .then(() => {
-    response.status(200).send('you are activated')
+    return response.status(200).send('you are activated')
+  })
+  .catch((error) => {
+    return response.status(500).send(error.message)
   })
 }
 

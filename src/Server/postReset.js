@@ -1,9 +1,7 @@
 const crypto = require('crypto')
-const Mailer = require('../Mailer/main.js')
 
 function postReset (request, response) {
   let email = request.body.email
-  let mailer = new Mailer(this.config.transport, this.config.sender, this.config.hostname)
   let resetCode
 
   return this.validateEmail(email)
@@ -17,13 +15,13 @@ function postReset (request, response) {
     return this.storeResetCode(resetCode, email)
   })
   .then(() => {
-    return mailer.sendReset(email, resetCode)
+    return this.sendReset(email, resetCode)
   })
   .then(() => {
     return response.status(200).send('reset link has been sent to your email')
   })
   .catch((error) => {
-    if (error.message === 'email is not found') return response.status(401).send('email is not registered')
+    if (error.message === 'email is not registered') return response.status(401).send('email is not registered')
     return response.status(500).send(error.messsage)
   })
 }

@@ -10,11 +10,18 @@ function getAuthorization (request, response) {
     hash.update(`${timestamp}/${randomBytes}`)
     let authCode = hash.digest('hex')
     this.storeAuthCode(authCode, request.session.user)
-    let redirection = url.parse(request.query.redirect_uri, true)
-    delete redirection.search
-    redirection.query.code = authCode
-    let redirectURI = url.format(redirection)
-    return response.redirect(302, url.format(redirectURI))
+    .then((result) => {
+      if (!result) return response.status(500).send('authorization code not stored')
+      let redirection = url.parse(request.query.redirect_uri, true)
+      delete redirection.search
+      redirection.query.code = authCode
+      let redirectURI = url.format(redirection)
+
+      return response.redirect(302, url.format(redirectURI))
+    })
+    .catch((error) => {
+      return response.status(500).send(error.message)
+    })
   }
 }
 

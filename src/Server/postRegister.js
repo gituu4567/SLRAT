@@ -1,8 +1,6 @@
 const crypto = require('crypto')
-const Mailer = require('../Mailer/main.js')
 
 function postRegister (request, response) {
-  let mailer = new Mailer(this.config.transport, this.config.sender, this.config.hostname)
   let credential = request.body
   let activationCode
   let userLimiter = this.config.userLimiter || [/.{1,}/]
@@ -21,7 +19,7 @@ function postRegister (request, response) {
     return this.storeActivationCode(activationCode, credential.email)
   })
   .then(() => {
-    return mailer.sendActivation(credential.email, activationCode)
+    return this.sendActivation(credential.email, activationCode)
   })
   .then(() => {
     response.status(200).send('activation link has been sent to your email')

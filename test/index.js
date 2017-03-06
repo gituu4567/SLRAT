@@ -1,36 +1,40 @@
 /* eslint-env mocha */
 const assert = require('assert')
 const Database = require('../src/Database/main.js')
+const Server = require('../src/Server/main.js')
+const config = require('./Server/config.js')
 
 const r = require('rethinkdb')
+const http = require('http')
+
+const sinon = require('sinon')
 
 describe.skip('Mailer', () => { // dont want to spam any one yet
   require('./Mailer/main.js')
 })
 
 describe('Database', () => {
-  // require('./Database/init.js')
-  // require('./Database/validateUser.js')
-  // require('./Database/activation.js')
-  // require('./Database/authenticateUser.js')
-  // require('./Database/authCode.js')
-  // require('./Database/resetCode.js')
   let config = { address: 'rethinkdb' }
   let database = new Database(config)
 
   before(() => {
-    // return database.init()
     return database.connect()
+    .then(() => {
+      return database.init()
+    })
   })
 
-  it('should connect', () => {
+  it('should establish a connection', () => {
     assert(database.connection)
   })
 
   it('init should create necessary tables', () => {
-    return database.init()
-    .then(() => {
-      assert(true)
+    return r.db('SLRAT').tableList().run(database.connection)
+    .then((tables) => {
+      assert(tables.find((v) => v === 'users'))
+      assert(tables.find((v) => v === 'activationcodes'))
+      assert(tables.find((v) => v === 'authcodes'))
+      assert(tables.find((v) => v === 'resetcodes'))
     })
   })
 
@@ -49,13 +53,54 @@ describe('Database', () => {
 })
 
 describe('Server', () => {
-  require('./Server/init.js')
-  require('./Server/getRoot.js')
-  require('./Server/postLogin.js')
-  require('./Server/postRegister.js')
+  let server = new Server(config)
+  server.sendActivation = sinon.stub().returns(Promise.resolve(true))
+  server.sendReset = sinon.stub().returns(Promise.resolve(true))
+
+  let httpServer
+
+  before((done) => {
+    server.init()
+    .then(() => {
+      httpServer = http.createServer(server.endPoints)
+      httpServer.listen(config.server.port, () => {
+        done()
+      })
+    })
+  })
+
+  it('init should establish database connection', () => {
+    assert(server.connection)
+  })
+
+  it('should create necessary tables', () => {
+    return r.db('SLRAT').tableList().run(server.connection)
+    .then((tables) => {
+      assert(tables.find((v) => v === 'users'))
+      assert(tables.find((v) => v === 'activationcodes'))
+      assert(tables.find((v) => v === 'authcodes'))
+      assert(tables.find((v) => v === 'resetcodes'))
+    })
+  })
+
+  require('./Server/postRegister.js')(server)
   require('./Server/getActivate.js')
+  require('./Server/postLogin.js')
   require('./Server/getAuthorization.js')
-  require('./Server/postNewPassword.js')
   require('./Server/postToken.js')
-  require('./Server/postReset.js')
+  require('./Server/postReset.js')(server)
+  require('./Server/postNewPassword.js')
+  require('./Server/getRoot.js')
+
+  after((done) => {
+    r.dbDrop('SLRAT').run(server.connection)
+    .then(() => {
+      return server.connection.close()
+    })
+    .then(() => {
+      httpServer.close(() => {
+        done()
+      })
+    })
+  })
 })

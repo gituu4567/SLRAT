@@ -2,6 +2,8 @@ const express = require('express')
 const session = require('express-session')
 const formParser = require('body-parser').urlencoded({ extended: false })
 
+var nodemailer = require('nodemailer')
+
 const Database = require('../Database/main.js')
 const getRoot = require('./getRoot.js')
 const postLogin = require('./postLogin.js')
@@ -16,46 +18,52 @@ class Server extends Database {
   constructor (config) {
     super(config.database)
     this.config = config.server
-    this.endPoint = express()
-    this.server = require('http').createServer(this.endPoint)
+    this.endPoints = express()
+    // this.server = require('http').createServer(this.endPoint)
+    this.connectDatbase = super.connect
+    this.initDatabse = super.init
+    // this.init = this.init.bind(this)
+    this.transport = nodemailer.createTransport(config.mailer.transport)
+    this.sender = config.mailer.sender
+    this.hostname = config.mailer.hostname
   }
 
-  start () {
-    return new Promise((resolve, reject) => {
-      this.server.listen(this.config.port, () => {
-        // TODO: this is problematic
-        // console.log(`server listening on port ${this.config.port}`)
-        resolve(true)
-      })
-    })
-  }
-
-  stop () {
-    return new Promise((resolve, reject) => {
-      this.server.close(() => {
-        resolve(true)
-      })
-    })
-  }
-
-  listenOnEndPoint () {
-    this.endPoint.use(function (req, res, next) {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-      next()
-    })
-    this.endPoint.use(session(this.config.session))
-    return this.createTables()
+  init () {
+    return this.connectDatbase()
     .then(() => {
-      this.endPoint.get('/', getRoot.bind(this))
-      this.endPoint.post('/login', formParser, postLogin.bind(this))
-      this.endPoint.post('/register', formParser, postRegister.bind(this))
-      this.endPoint.get('/activate', formParser, getActivate.bind(this))
-      this.endPoint.get('/authorization', getAuthorization.bind(this))
-      this.endPoint.post('/token', postToken.bind(this))
-      this.endPoint.post('/newpassword', formParser, postNewPassword.bind(this))
-      this.endPoint.post('/reset', formParser, postReset.bind(this))
+      return this.initDatabse()
     })
+    .then((result) => {
+      this.endPoints.use(function (req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*')
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+        next()
+      })
+
+      this.endPoints.use(session(this.config.session))
+
+      this.endPoints.get('/', getRoot.bind(this))
+      this.endPoints.post('/login', formParser, postLogin.bind(this))
+      this.endPoints.post('/register', formParser, postRegister.bind(this))
+      this.endPoints.get('/activate', formParser, getActivate.bind(this))
+      this.endPoints.get('/authorization', getAuthorization.bind(this))
+      this.endPoints.post('/token', postToken.bind(this))
+      this.endPoints.post('/newpassword', formParser, postNewPassword.bind(this))
+      this.endPoints.post('/reset', formParser, postReset.bind(this))
+
+      return Promise.resolve(true)
+    })
+    .catch((error) => {
+      throw new Error(error)
+    })
+  }
+
+  sendActivation () {
+    console.log('sent reset');
+  }
+
+  sendReset () {
+    console.log('sent activation');
   }
 }
 

@@ -1,48 +1,41 @@
 /* eslint-env mocha */
 const assert = require('assert')
 const request = require('request-promise')
-const Server = require('../../src/Server/main.js')
 
 const config = require('./config.js')
-describe('postReset', () => {
-  let server
-  beforeEach(() => {
-    server = new Server(config)
-    return server.listenOnEndPoint()
-    .then(() => {
-      return server.start()
-    })
-  })
+const scenarios = require('../scenarios.js')
 
-  afterEach(() => {
-    return server.stop()
-  })
+module.exports = function (server) {
+  describe('postReset', () => {
+    let resetReq = {
+      method: 'POST',
+      uri: `http://localhost:${config.server.port}/reset`,
+      followRedirect: false,
+      simple: false,
+      resolveWithFullResponse: true
+    }
 
-  let resetReq = {
-    method: 'POST',
-    uri: `http://localhost:${config.server.port}/reset`,
-    form: {email: 'newsjianbo@163.com'},
-    followRedirect: false,
-    simple: false,
-    resolveWithFullResponse: true
-  }
-
-  it('should respond 401 if no email is matched', () => {
-    return request(resetReq)
-    .then((response) => {
-      assert.equal(response.statusCode, 401)
-    })
-  })
-  it.skip('should respond 200 if resetcode is sent to email', () => {
-    return server.createUser({email: 'newsjianbo@163.com', password: 'jianbo2017'})
-    .then(() => {
-      return server.activateUser('newsjianbo@163.com')
-    })
-    .then(() => {
+    it('should respond 401 if no email is matched', () => {
+      resetReq.form = { email: 'wrong@email.com' }
       return request(resetReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+      })
     })
-    .then((response) => {
-      assert.equal(response.statusCode, 200)
+
+    it('should respond 200 on successful reset request', () => {
+      resetReq.form = { email: scenarios.user.credential.email }
+      return request(resetReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 200)
+      })
+    })
+
+    it('should have sent an reset code to email', () => {
+      let lastCallArgs = server.sendReset.args[0]
+      assert.equal(lastCallArgs[0], scenarios.user.credential.email)
+      assert(lastCallArgs[1])
+      scenarios.resetCode = lastCallArgs[1]
     })
   })
-})
+}

@@ -35,7 +35,7 @@ describe('authorization', () => {
   it('verifyAuthCode() should resolve email if authcode is found', () => {
     return database.verifyAuthCode(code)
     .then((result) => {
-      assert(result)
+      assert.equal(result, email)
     })
   })
 
