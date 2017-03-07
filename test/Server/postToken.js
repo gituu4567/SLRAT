@@ -3,7 +3,7 @@ const assert = require('assert')
 const request = require('request-promise')
 const jwt = require('jsonwebtoken')
 
-const config = require('./config.js')
+const config = require('../config.js')
 const scenarios = require('../scenarios.js')
 
 describe('postToken', () => {

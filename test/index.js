@@ -2,16 +2,12 @@
 const assert = require('assert')
 const Database = require('../src/Database/main.js')
 const Server = require('../src/Server/main.js')
-const config = require('./Server/config.js')
+const config = require('./config.js')
 
 const r = require('rethinkdb')
 const http = require('http')
 
 const sinon = require('sinon')
-
-describe.skip('Mailer', () => { // dont want to spam any one yet
-  require('./Mailer/main.js')
-})
 
 describe('Database', () => {
   let config = { address: 'rethinkdb' }

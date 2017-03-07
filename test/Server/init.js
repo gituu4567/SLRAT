@@ -2,7 +2,7 @@
 const assert = require('assert')
 const Server = require('../../src/Server/main.js')
 
-const config = require('./config.js')
+const config = require('../config.js')
 
 describe.only('init', () => {
   let server

@@ -2,7 +2,7 @@
 const assert = require('assert')
 const request = require('request-promise')
 
-const config = require('./config.js')
+const config = require('../config.js')
 const scenarios = require('../scenarios.js')
 
 describe('getActivate', () => {
