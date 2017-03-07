@@ -17,12 +17,21 @@ const postReset = require('./postReset.js')
 class Server extends Database {
   constructor (config) {
     super(config.database)
+
     this.config = config.server
+
+    this.session = config.session
+    this.session.resave = this.session.resave || false
+    this.session.saveUninitialized = this.session.saveUninitialized || true
+    this.session.cookie = this.session.cookie || { secure: true }
+
+    this.token = config.token
+
     this.endPoints = express()
-    // this.server = require('http').createServer(this.endPoint)
+
     this.connectDatbase = super.connect
     this.initDatabse = super.init
-    // this.init = this.init.bind(this)
+
     this.transport = nodemailer.createTransport(config.mailer.transport)
     this.sender = config.mailer.sender
     this.hostname = config.mailer.hostname
@@ -40,7 +49,7 @@ class Server extends Database {
         next()
       })
 
-      this.endPoints.use(session(this.config.session))
+      this.endPoints.use(session(this.session))
 
       this.endPoints.get('/', getRoot.bind(this))
       this.endPoints.post('/login', formParser, postLogin.bind(this))
@@ -58,12 +67,43 @@ class Server extends Database {
     })
   }
 
-  sendActivation () {
-    console.log('sent reset');
+  sendActivation (address, code) {
+    let mailOptions = {
+      from: this.sender,
+      to: address,
+      subject: 'Account Activation',
+      text: `please visit this address ${this.hostname}/activate?code=${code}`,
+      html: `<b>please visit this address <a href=${this.hostname}/activate?code=${code}>${this.hostname}/activate?code=${code}</a></b>`
+    }
+
+    return new Promise((resolve, reject) => {
+      this.transport.sendMail(mailOptions, (error, info) => {
+        if (error) reject(error)
+        resolve(info)
+      })
+    })
   }
 
-  sendReset () {
-    console.log('sent activation');
+  sendReset (address, code) {
+    let mailOptions = {
+      from: this.sender,
+      to: address,
+      subject: 'Password Reset',
+      text: `please visit this address http://${this.hostname}/newpassword?code=${code}`,
+      html: `<b>please visit this address <a href=${this.hostname}/newpassword?code=${code}>http://${this.hostname}/newpassword?code=${code}</a></b>`
+    }
+
+    return new Promise((resolve, reject) => {
+      this.transport.sendMail(mailOptions, (error, info) => {
+        if (error) reject(error)
+        resolve(info)
+      })
+    })
+  }
+
+  start () {
+    console.log(`listening on port: ${this.config.port}`)
+    this.endPoints.listen(this.config.port)
   }
 }
 

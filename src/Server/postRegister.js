@@ -22,7 +22,7 @@ function postRegister (request, response) {
     return this.sendActivation(credential.email, activationCode)
   })
   .then(() => {
-    response.status(200).send('activation link has been sent to your email')
+    response.status(200).send('An Email has been sent to you, please check.')
   })
   .catch((error) => {
     response.status(500).send(error.message)

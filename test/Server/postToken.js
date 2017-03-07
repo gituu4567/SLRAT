@@ -38,7 +38,7 @@ describe('postToken', () => {
   it('should respond valid token with email', () => {
     let token = scenarios.token
     try {
-      let decoded = jwt.verify(token, config.server.token.secret)
+      let decoded = jwt.verify(token, config.token.secret)
       assert.equal(decoded.email, scenarios.user.credential.email)
     } catch (error) {
       throw new Error('token is invalid')

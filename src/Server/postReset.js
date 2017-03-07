@@ -18,7 +18,7 @@ function postReset (request, response) {
     return this.sendReset(email, resetCode)
   })
   .then(() => {
-    return response.status(200).send('reset link has been sent to your email')
+    return response.status(200).send('An Email has been sent to you, please check.')
   })
   .catch((error) => {
     if (error.message === 'email is not registered') return response.status(401).send('email is not registered')

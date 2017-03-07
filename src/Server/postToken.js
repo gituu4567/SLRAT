@@ -5,7 +5,7 @@ function postToken (request, response) {
   this.verifyAuthCode(authCode)
   .then((email) => {
     // TODO: should resolve a secret
-    let token = jwt.sign({email: email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}, this.config.token.secret)
+    let token = jwt.sign({email: email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}, this.token.secret)
     response.send(token)
   })
   .catch((error) => {
