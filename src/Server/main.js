@@ -1,6 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const formParser = require('body-parser').urlencoded({ extended: false })
+const path = require('path')
 
 var nodemailer = require('nodemailer')
 
@@ -19,6 +20,7 @@ class Server extends Database {
     super(config.database)
 
     this.config = config.server
+    this.publicDir = config.server.publicDir || path.resolve(__dirname, '../../public/')
 
     this.session = config.session
     this.session.resave = this.session.resave || false
@@ -59,6 +61,8 @@ class Server extends Database {
       this.endPoints.post('/token', postToken.bind(this))
       this.endPoints.post('/newpassword', formParser, postNewPassword.bind(this))
       this.endPoints.post('/reset', formParser, postReset.bind(this))
+
+      this.endPoints.use(express.static(this.publicDir, {extensions: ['html']}))
 
       return Promise.resolve(true)
     })
@@ -102,8 +106,11 @@ class Server extends Database {
   }
 
   start () {
-    console.log(`listening on port: ${this.config.port}`)
-    this.endPoints.listen(this.config.port)
+    return this.init()
+    .then(() => {
+      console.log(`listening on port: ${this.config.port}`)
+      this.endPoints.listen(this.config.port)
+    })
   }
 }
 

@@ -1,0 +1,26 @@
+form {
+  font-family: sans-serif;
+  font-weight: 300;
+  color: rgb(80,80,80);
+  margin-top: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+}
+label {
+  display: block;
+  margin-top: 10px;
+}
+input {
+  display: block;
+  width: 200px;
+}
+input[type="submit"] {
+  font-family: sans-serif;
+  font-weight: 300;
+  color: rgb(80,80,80);
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 120px;
+}
