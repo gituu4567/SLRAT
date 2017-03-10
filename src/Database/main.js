@@ -21,10 +21,13 @@ class Database {
       return r.db('SLRAT').tableCreate('users').run(this.connection)
     })
     .then(() => {
-      return r.db('SLRAT').tableCreate('activationcodes').run(this.connection)
+      return r.db('SLRAT').tableCreate('verification').run(this.connection)
     })
     .then(() => {
       return r.db('SLRAT').tableCreate('authcodes').run(this.connection)
+    })
+    .then(() => {
+      return r.db('SLRAT').tableCreate('activationcodes').run(this.connection)
     })
     .then(() => {
       return r.db('SLRAT').tableCreate('resetcodes').run(this.connection)
@@ -63,6 +66,9 @@ class Database {
 
 Database.prototype.addValidUser = require('./validateUser.js').addValidUser
 Database.prototype.allowThisUser = require('./validateUser.js').allowThisUser
+
+Database.prototype.generateVerificationCode = require('./verification.js').generateVerificationCode
+Database.prototype.verifyCode = require('./verification.js').verifyCode
 
 Database.prototype.storeActivationCode = require('./activation.js').storeActivationCode
 Database.prototype.verifyActivation = require('./activation.js').verifyActivation

@@ -31,10 +31,12 @@ describe('Database', () => {
       assert(tables.find((v) => v === 'activationcodes'))
       assert(tables.find((v) => v === 'authcodes'))
       assert(tables.find((v) => v === 'resetcodes'))
+      assert(tables.find((v) => v === 'verification'))
     })
   })
 
   require('./Database/createUser.js')
+  require('./Database/verification.js')
   require('./Database/authenticateUser.js')
   require('./Database/activation.js')
   require('./Database/authorization.js')
