@@ -6,9 +6,12 @@
     </head>
     <body>
       <form target="_self" method="post">
-        <label>Email: <input autoComplete="false" type="text" name="email" /> </label>
-        <label>Password: <input autoComplete="false" type="password" name="password" /> </label>
+        <label>Contact: <input autoComplete="off" type="text" name="email" /> </label>
+        <label>Password: <input autoComplete="off" type="password" name="password" /> </label>
+        <label>Verification Code: <input autoComplete="off" type="text" name="verificationCode" /> </label>
+        <input type="submit" value="Send" formaction="/sendVerification" formtarget="response" />
         <input type="submit" value="Register" />
       </form>
+      <iframe name="response"></iframe>
     </body>
 </html>
