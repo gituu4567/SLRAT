@@ -9,9 +9,32 @@
         <label>Contact: <input autoComplete="off" type="text" name="email" /> </label>
         <label>Password: <input autoComplete="off" type="password" name="password" /> </label>
         <label>Verification Code: <input autoComplete="off" type="text" name="verificationCode" /> </label>
-        <input type="submit" value="Send" formaction="/sendVerification" formtarget="response" />
-        <input type="submit" value="Register" />
+        <input type="submit" name="Send" value="Send" formmethod="get" formaction="/sendVerification" formtarget="response" onclick="disableSend()" />
+        <input type="submit" name="Register" value="Register" />
       </form>
       <iframe name="response"></iframe>
+      <script>
+        function disableSend() {
+          var waitTime = 60
+          submit = document.querySelector('input[value="Send"]')
+
+          submit.style.color = 'lightgrey'
+
+          function countdown () {
+            waitTime -= 1
+            if (waitTime === 59) submit.disabled = true
+            submit.value = waitTime
+            console.log('countdown', waitTime);
+            if (waitTime <= 0) {
+              window.clearInterval(interval)
+              submit.disabled = false
+              submit.style.color = 'rgb(80,80,80)'
+              submit.value = 'Send'
+            }
+          }
+
+          var interval = window.setInterval(countdown, 1000)
+        }
+      </script>
     </body>
 </html>

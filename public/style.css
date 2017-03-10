@@ -32,7 +32,7 @@ input[name="verificationCode"] {
   float: left;
 }
 
-input[type="submit"][value="Send"] {
+input[type="submit"][name="Send"] {
   position: static;
   width: 50px;
   float: right;
