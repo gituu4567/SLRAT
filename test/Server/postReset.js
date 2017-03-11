@@ -15,8 +15,8 @@ module.exports = function (server) {
       resolveWithFullResponse: true
     }
 
-    it('should respond 401 if no email is matched', () => {
-      resetReq.form = { email: 'wrong@email.com' }
+    it('should respond 401 if no contact is matched', () => {
+      resetReq.form = { contact: 'wrong@email.com' }
       return request(resetReq)
       .then((response) => {
         assert.equal(response.statusCode, 401)
@@ -24,16 +24,16 @@ module.exports = function (server) {
     })
 
     it('should respond 200 on successful reset request', () => {
-      resetReq.form = { email: scenarios.user.credential.email }
+      resetReq.form = { contact: scenarios.user.credential.contact }
       return request(resetReq)
       .then((response) => {
         assert.equal(response.statusCode, 200)
       })
     })
 
-    it('should have sent an reset code to email', () => {
+    it('should have sent an reset code to contact', () => {
       let lastCallArgs = server.sendReset.args[0]
-      assert.equal(lastCallArgs[0], scenarios.user.credential.email)
+      assert.equal(lastCallArgs[0], scenarios.user.credential.contact)
       assert(lastCallArgs[1])
       scenarios.resetCode = lastCallArgs[1]
     })

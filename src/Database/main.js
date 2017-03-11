@@ -76,7 +76,7 @@ Database.prototype.verifyActivation = require('./activation.js').verifyActivatio
 Database.prototype.createUser = require('./authenticateUser.js').createUser
 Database.prototype.activateUser = require('./authenticateUser.js').activateUser
 Database.prototype.authenticate = require('./authenticateUser.js').authenticate
-Database.prototype.validateEmail = require('./authenticateUser.js').validateEmail
+Database.prototype.validateContact = require('./authenticateUser.js').validateContact
 
 Database.prototype.storeAuthCode = require('./authCode.js').storeAuthCode
 Database.prototype.verifyAuthCode = require('./authCode.js').verifyAuthCode

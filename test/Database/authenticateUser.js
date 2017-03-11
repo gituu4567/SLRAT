@@ -7,7 +7,7 @@ describe('authentication', () => {
   let database
 
   let credential = {
-    email: 'example@authenticate.com',
+    contact: 'example@authenticate.com',
     password: 'password'
   }
 
@@ -38,7 +38,7 @@ describe('authentication', () => {
   })
 
   it('activateUser() should set user active', () => {
-    return database.activateUser(credential.email)
+    return database.activateUser(credential.contact)
     .then((result) => {
       assert(result)
     })

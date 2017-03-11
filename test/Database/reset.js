@@ -7,7 +7,7 @@ describe('reset', () => {
 
   let database
   let code = 'takethecodeandbehappy'
-  let email = 'test@example.com'
+  let contact = 'test@example.com'
 
   before(() => {
     database = new Database(config)
@@ -18,19 +18,19 @@ describe('reset', () => {
     return database.connection.close()
   })
 
-  it('validateEmail() should reject if no email is found', () => {
-    return database.validateEmail(email)
+  it('validateContact() should reject if no contact is found', () => {
+    return database.validateContact(contact)
     .then(() => {
       assert(false)
     })
     .catch((error) => {
-      assert.equal(error.message, 'email is not registered')
+      assert.equal(error.message, 'contact is not registered')
     })
   })
 
-  it('validateEmail() should resolve if email is found', () => {
+  it('validateContact() should resolve if email is found', () => {
     let registeredEmail = 'example@email.com' // NOTE: this email is registered with previous test
-    return database.validateEmail(registeredEmail)
+    return database.validateContact(registeredEmail)
     .then((result) => {
       assert(result)
     })
@@ -41,12 +41,12 @@ describe('reset', () => {
 
   it('changePassword() should reject if email is not found', () => {
     let password = 'newpassword'
-    return database.changePassword(email, password)
+    return database.changePassword(contact, password)
     .then(() => {
       assert(false)
     })
     .catch((error) => {
-      assert.equal(error.message, 'email is not registered')
+      assert.equal(error.message, 'contact is not registered')
     })
   })
 
@@ -70,7 +70,7 @@ describe('reset', () => {
   })
 
   it('storeResetCode() should add a code', () => {
-    return database.storeResetCode(code, email)
+    return database.storeResetCode(code, contact)
     .then((result) => {
       assert(result)
     })
@@ -79,7 +79,7 @@ describe('reset', () => {
   it('verifyResetCode() should resolve email if code is found', () => {
     return database.verifyResetCode(code)
     .then((result) => {
-      assert.equal(result, email)
+      assert.equal(result, contact)
     })
   })
 

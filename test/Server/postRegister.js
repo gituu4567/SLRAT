@@ -20,7 +20,7 @@ module.exports = function (server) {
     // TODO: should be able to omit userLimiter in config
     it('should respond 403 if email is not allowed to register', () => {
       let badRegisterReq = Object.assign({}, registerReq)
-      badRegisterReq.form = {email: 'iam@bad.com', password: 'password'}
+      badRegisterReq.form = {contact: 'iam@bad.com', password: 'password'}
       return request(badRegisterReq)
       .then((response) => {
         assert.equal(response.statusCode, 403)
@@ -37,10 +37,10 @@ module.exports = function (server) {
       })
     })
 
-    it('should have sent an activation code to email', () => {
+    it('should have sent an activation code to contact', () => {
       let lastCallArgs = server.sendActivation.args[0]
       scenarios.activationCode = lastCallArgs[1]
-      assert.equal(lastCallArgs[0], credential.email)
+      assert.equal(lastCallArgs[0], credential.contact)
       assert(lastCallArgs[1])
     })
   })

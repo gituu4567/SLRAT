@@ -2,8 +2,8 @@ function postNewPassword (request, response) {
   let resetCode = request.query.code
   if (!resetCode) return response.sendStatus(401)
   this.verifyResetCode(resetCode)
-  .then((email) => {
-    return this.changePassword(email, request.body.password)
+  .then((contact) => {
+    return this.changePassword(contact, request.body.password)
   })
   .then(() => {
     response.status(200).send('your password has been changed')

@@ -36,7 +36,7 @@ describe('getRoot', () => {
       return request(rootReq)
     })
     .then((response) => {
-      assert.equal(response, `you are logged in as ${scenarios.user.credential.email}`)
+      assert.equal(response, `you are logged in as ${scenarios.user.credential.contact}`)
     })
     .catch((error) => {
       throw new Error(error)

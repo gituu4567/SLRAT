@@ -5,7 +5,7 @@ function postRegister (request, response) {
   let activationCode
   let userLimiter = this.config.userLimiter || [/.{1,}/]
   let allowed = userLimiter.some((re) => {
-    return re.test(credential.email)
+    return re.test(credential.contact)
   })
   if (!allowed) return response.sendStatus(403)
   this.createUser(credential)
@@ -16,10 +16,10 @@ function postRegister (request, response) {
     hash.update(`${timestamp}/${randomBytes}`)
     activationCode = hash.digest('hex')
 
-    return this.storeActivationCode(activationCode, credential.email)
+    return this.storeActivationCode(activationCode, credential.contact)
   })
   .then(() => {
-    return this.sendActivation(credential.email, activationCode)
+    return this.sendActivation(credential.contact, activationCode)
   })
   .then(() => {
     response.status(200).send('An Email has been sent to you, please check.')

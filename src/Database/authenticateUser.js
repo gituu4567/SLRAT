@@ -1,9 +1,9 @@
 const r = require('rethinkdb')
 
 function createUser (credential) {
-  return r.db('SLRAT').table('users').filter({email: credential.email}).count().run(this.connection)
+  return r.db('SLRAT').table('users').filter({contact: credential.contact}).count().run(this.connection)
   .then((count) => {
-    if (count > 0) return Promise.reject(new Error('email is already registered'))
+    if (count > 0) return Promise.reject(new Error('contact is already registered'))
     let user = Object.assign({}, credential)
     user.active = false
     return r.db('SLRAT').table('users').insert(user).run(this.connection)
@@ -28,8 +28,8 @@ function authenticate (credential) {
   })
 }
 
-function activateUser (user) {
-  return r.db('SLRAT').table('users').filter({email: user})(0).update({active: true}).run(this.connection)
+function activateUser (contact) {
+  return r.db('SLRAT').table('users').filter({contact})(0).update({active: true}).run(this.connection)
   .then((result) => {
     if (result.replaced === 1) return Promise.resolve(true)
     return Promise.reject(false)
@@ -39,15 +39,15 @@ function activateUser (user) {
   })
 }
 
-function validateEmail (email) {
-  return r.db('SLRAT').table('users').filter({email})(0).run(this.connection)
+function validateContact (contact) {
+  return r.db('SLRAT').table('users').filter({contact})(0).run(this.connection)
   .then((doc) => {
-    return Promise.resolve(email)
+    return Promise.resolve(contact)
   })
   .catch((error) => {
-    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('email is not registered'))
+    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('contact is not registered'))
     return Promise.reject(error)
   })
 }
 
-module.exports = {createUser, activateUser, authenticate, validateEmail}
+module.exports = {createUser, activateUser, authenticate, validateContact}

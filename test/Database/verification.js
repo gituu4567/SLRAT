@@ -5,7 +5,7 @@ const Database = require('../../src/Database/main.js')
 // const r = require('rethinkdb')
 const scenarios = require('../scenarios.js')
 
-describe.only('verification', () => {
+describe('verification', () => {
   let config = { address: 'rethinkdb' }
   let database
 

@@ -1,7 +1,7 @@
 module.exports = {
   user: {
     credential: {
-      email: 'test@email.com',
+      contact: 'test@email.com',
       password: 'testshouldhavenone'
     }
   }
