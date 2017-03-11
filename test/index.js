@@ -55,6 +55,9 @@ describe('Server', () => {
   server.sendActivation = sinon.stub().returns(Promise.resolve(true))
   server.sendReset = sinon.stub().returns(Promise.resolve(true))
 
+  server.sendSMSVerification = sinon.stub().returns(Promise.resolve(true))
+  server.sendEmailVerification = sinon.stub().returns(Promise.resolve(true))
+
   let httpServer
 
   before((done) => {
@@ -81,6 +84,7 @@ describe('Server', () => {
     })
   })
 
+  require('./Server/getVerification.js')(server)
   require('./Server/postRegister.js')(server)
   require('./Server/getActivate.js')
   require('./Server/postLogin.js')

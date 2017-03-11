@@ -6,6 +6,7 @@ const path = require('path')
 var nodemailer = require('nodemailer')
 
 const Database = require('../Database/main.js')
+const getVerification = require('./getVerification.js')
 const getRoot = require('./getRoot.js')
 const postLogin = require('./postLogin.js')
 const postRegister = require('./postRegister.js')
@@ -54,6 +55,7 @@ class Server extends Database {
       this.endPoints.use(session(this.session))
 
       this.endPoints.get('/', getRoot.bind(this))
+      this.endPoints.get('/verification', getVerification.bind(this))
       this.endPoints.post('/login', formParser, postLogin.bind(this))
       this.endPoints.post('/register', formParser, postRegister.bind(this))
       this.endPoints.get('/activate', formParser, getActivate.bind(this))
@@ -69,6 +71,14 @@ class Server extends Database {
     .catch((error) => {
       throw new Error(error)
     })
+  }
+
+  sendEmailVerification () {
+    return Promise.resolve(true)
+  }
+
+  sendSMSVerification () {
+    return Promise.resolve(true)
   }
 
   sendActivation (address, code) {

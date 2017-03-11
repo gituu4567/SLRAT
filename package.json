@@ -4,6 +4,7 @@
   "description": "Signup, Login, Reset, Authroization, Token",
   "scripts": {
     "test": "mocha --inspect --watch ./test/index.js",
+    "debug": "mocha --inspect --debug-brk --watch ./test/index.js",
     "cover": "babel-node ./node_modules/.bin/babel-istanbul cover _mocha -- ./test/index.js",
     "build": "babel src -d dist"
   },
