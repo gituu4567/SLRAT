@@ -11,6 +11,7 @@
         <label>Verification Code: <input autoComplete="off" type="text" name="verificationCode" /> </label>
         <input type="submit" name="Send" value="Send" formmethod="get" formaction="/sendVerification" formtarget="response" onclick="disableSend()" />
         <input type="submit" name="Register" value="Register" />
+        <input type="text" name="action" value="register" disabled="true" style="display:none">
       </form>
       <iframe name="response"></iframe>
       <script>
