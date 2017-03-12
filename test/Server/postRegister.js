@@ -7,41 +7,72 @@ const scenarios = require('../scenarios.js')
 
 module.exports = function (server) {
   describe('postRegister', () => {
-    let credential = scenarios.user.credential
     let registerReq = {
       method: 'POST',
       uri: `http://localhost:${config.server.port}/register`,
-      form: credential,
+      form: {},
       followRedirect: false,
       simple: false,
       resolveWithFullResponse: true
     }
 
-    // TODO: should be able to omit userLimiter in config
-    it('should respond 403 if email is not allowed to register', () => {
-      let badRegisterReq = Object.assign({}, registerReq)
-      badRegisterReq.form = {contact: 'iam@bad.com', password: 'password'}
-      return request(badRegisterReq)
+    it('should respond 401 if contact or password is missing', () => {
+      return request(registerReq)
       .then((response) => {
-        assert.equal(response.statusCode, 403)
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Please complete all the forms')
+      })
+    })
+
+    it('should respond 401 if verificationCode is missing', () => {
+      registerReq.form.contact = scenarios.user.credential.contact
+      registerReq.form.password = scenarios.user.credential.password
+
+      return request(registerReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Please provide your verification code')
+      })
+    })
+
+    it('should respond 401 if verificationCode is invalid', () => {
+      registerReq.form.verificationCode = 'fakecode'
+
+      return request(registerReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
+      })
+    })
+
+    it('should respond 401 if verificationCode is valid but contact is unmatched', () => {
+      registerReq.form.verificationCode = scenarios.verificationCode
+      registerReq.form.contact = 'changed@email.com'
+
+      return request(registerReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
       })
     })
 
     it('should respond 200 on successful user creation', () => {
+      registerReq.form.contact = scenarios.user.credential.contact
+      registerReq.form.password = scenarios.user.credential.password
+
       return request(registerReq)
       .then((response) => {
         assert.equal(response.statusCode, 200)
-      })
-      .catch((error) => {
-        throw new Error(error)
+        assert.equal(response.body, 'Your account has been created')
       })
     })
 
-    it('should have sent an activation code to contact', () => {
-      let lastCallArgs = server.sendActivation.args[0]
-      scenarios.activationCode = lastCallArgs[1]
-      assert.equal(lastCallArgs[0], credential.contact)
-      assert(lastCallArgs[1])
+    it('should not be able to reuse verification code', () => {
+      return request(registerReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
+      })
     })
   })
 }

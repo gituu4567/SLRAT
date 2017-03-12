@@ -1,30 +1,29 @@
-const crypto = require('crypto')
+const r = require('rethinkdb')
 
 function postRegister (request, response) {
-  let credential = request.body
-  let activationCode
-  let userLimiter = this.config.userLimiter || [/.{1,}/]
-  let allowed = userLimiter.some((re) => {
-    return re.test(credential.contact)
-  })
-  if (!allowed) return response.sendStatus(403)
-  this.createUser(credential)
-  .then(() => {
-    let timestamp = Date.valueOf()
-    let randomBytes = crypto.randomBytes(16).toString('hex')
-    let hash = crypto.createHash('sha256')
-    hash.update(`${timestamp}/${randomBytes}`)
-    activationCode = hash.digest('hex')
-
-    return this.storeActivationCode(activationCode, credential.contact)
+  let verificationCode = request.body.verificationCode
+  let contact = request.body.contact
+  let password = request.body.password
+  if (!contact || !password) return response.status(401).send('Please complete all the forms')
+  if (!verificationCode) return response.status(401).send('Please provide your verification code')
+  this.verifyCode(verificationCode)
+  .then((contact) => {
+    if (contact === request.body.contact) return Promise.resolve()
+    return Promise.reject(new Error('Your verification code is invalid'))
   })
   .then(() => {
-    return this.sendActivation(credential.contact, activationCode)
+    return this.createUser({contact, password})
   })
   .then(() => {
-    response.status(200).send('An Email has been sent to you, please check.')
+    return r.db('SLRAT').table('verification').get(verificationCode).delete().run(this.connection)
+  })
+  .then(() => {
+    response.status(200).send('Your account has been created')
   })
   .catch((error) => {
+    if (error.message === 'invalid verification code') return response.status(401).send('Your verification code is invalid')
+    if (error.message === 'Your verification code is invalid') return response.status(401).send(error.message)
+    console.log(error);
     response.status(500).send(error.message)
   })
 }
