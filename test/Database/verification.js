@@ -2,9 +2,6 @@
 const assert = require('assert')
 const Database = require('../../src/Database/main.js')
 
-// const r = require('rethinkdb')
-const scenarios = require('../scenarios.js')
-
 describe('verification', () => {
   let config = { address: 'rethinkdb' }
   let database
@@ -21,7 +18,7 @@ describe('verification', () => {
     return database.connection.close()
   })
 
-  it('insert an unique code', () => {
+  it('generateVerificationCode() should store an unique code', () => {
     return database.generateVerificationCode(contact)
     .then((code) => {
       assert(code)

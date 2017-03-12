@@ -35,12 +35,4 @@ describe('user creation', () => {
       assert.equal(error.message, 'contact is already registered')
     })
   })
-
-  it('user should be inactive initially', () => {
-    // TODO: database.findUser() ?
-    return r.db('SLRAT').table('users').filter({contact: credential.contact}).nth(0).run(database.connection)
-    .then((result) => {
-      assert.equal(result.active, false)
-    })
-  })
 })

@@ -7,7 +7,7 @@ describe('authentication', () => {
   let database
 
   let credential = {
-    contact: 'example@authenticate.com',
+    contact: 'example@email.com',
     password: 'password'
   }
 
@@ -21,33 +21,16 @@ describe('authentication', () => {
   })
 
   it('authenticate() should reject if credential does not match', () => {
-    return database.authenticate(credential)
+    return database.authenticate({contact: 'iam@bad.com', password: 'hacked'})
+    .then(() => {
+      throw new Error('should not resolve')
+    })
     .catch((error) => {
       assert.equal(error.message, 'credential does not match')
     })
   })
 
-  it('authenticate() should reject if user is not activated', () => {
-    return database.createUser(credential)
-    .then(() => {
-      return database.authenticate(credential)
-    })
-    .catch((error) => {
-      assert.equal(error.message, 'user is not active')
-    })
-  })
-
-  it('activateUser() should set user active', () => {
-    return database.activateUser(credential.contact)
-    .then((result) => {
-      assert(result)
-    })
-    .catch((error) => {
-      throw new Error(error)
-    })
-  })
-
-  it('authenticate should resolve true after user is activated', () => {
+  it('authenticate should resolve true when credential matches', () => {
     return database.authenticate(credential)
     .then((result) => {
       assert(result)

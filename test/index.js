@@ -86,7 +86,7 @@ describe('Server', () => {
 
   require('./Server/getVerification.js')(server)
   require('./Server/postRegister.js')(server)
-  require('./Server/getActivate.js')
+  // require('./Server/getActivate.js')
   require('./Server/postLogin.js')
   require('./Server/getAuthorization.js')
   require('./Server/postToken.js')

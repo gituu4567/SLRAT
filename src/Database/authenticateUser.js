@@ -5,7 +5,6 @@ function createUser (credential) {
   .then((count) => {
     if (count > 0) return Promise.reject(new Error('contact is already registered'))
     let user = Object.assign({}, credential)
-    user.active = false
     return r.db('SLRAT').table('users').insert(user).run(this.connection)
   })
   .then(() => {
@@ -19,7 +18,6 @@ function createUser (credential) {
 function authenticate (credential) {
   return r.db('SLRAT').table('users').filter(credential)(0).run(this.connection)
   .then((doc) => {
-    if (!doc.active) return Promise.reject(new Error('user is not active'))
     return Promise.resolve(true)
   })
   .catch((error) => {
