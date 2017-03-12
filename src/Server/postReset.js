@@ -1,28 +1,31 @@
-const crypto = require('crypto')
+const r = require('rethinkdb')
 
 function postReset (request, response) {
+  let verificationCode = request.body.verificationCode
   let contact = request.body.contact
-  let resetCode
+  let password = request.body.password
 
-  return this.validateContact(contact)
-  .then((contact) => {
-    let timestamp = Date.valueOf()
-    let randomBytes = crypto.randomBytes(16).toString('hex')
-    let hash = crypto.createHash('sha256')
-    hash.update(`${timestamp}/${randomBytes}`)
-    resetCode = hash.digest('hex')
+  if (!contact || !password) return response.status(401).send('Please complete all the forms')
+  if (!verificationCode) return response.status(401).send('Please provide your verification code')
 
-    return this.storeResetCode(resetCode, contact)
+  this.verifyCode(verificationCode)
+  .then((result) => {
+    if (result === contact) return Promise.resolve()
+    return Promise.reject(new Error('Your verification code is invalid'))
   })
   .then(() => {
-    return this.sendReset(contact, resetCode)
+    return this.changePassword(contact, password)
   })
   .then(() => {
-    return response.status(200).send('An Email has been sent to you, please check.')
+    return r.db('SLRAT').table('verification').get(verificationCode).delete().run(this.connection)
+  })
+  .then(() => {
+    response.status(200).send('Your password has been changed')
   })
   .catch((error) => {
-    if (error.message === 'contact is not registered') return response.status(401).send('contact is not registered')
-    return response.status(500).send(error.messsage)
+    if (error.message === 'invalid verification code') return response.status(401).send('Your verification code is invalid')
+    if (error.message === 'Your verification code is invalid') return response.status(401).send(error.message)
+    response.status(500).send(error.message)
   })
 }
 

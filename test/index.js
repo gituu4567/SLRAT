@@ -91,7 +91,7 @@ describe('Server', () => {
   require('./Server/getAuthorization.js')
   require('./Server/postToken.js')
   require('./Server/postReset.js')(server)
-  require('./Server/postNewPassword.js')
+  // require('./Server/postNewPassword.js')
   require('./Server/getRoot.js')
 
   after((done) => {

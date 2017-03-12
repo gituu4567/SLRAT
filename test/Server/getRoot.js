@@ -24,7 +24,10 @@ describe('getRoot', () => {
     let loginReq = {
       method: 'POST',
       uri: `http://localhost:${config.server.port}/login`,
-      form: scenarios.user.credential,
+      form: {
+        contact: scenarios.user.credential.contact,
+        password: scenarios.user.credential.newPassword
+      },
       followRedirect: false,
       simple: false,
       resolveWithFullResponse: true,

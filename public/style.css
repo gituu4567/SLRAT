@@ -11,6 +11,10 @@ label {
   display: block;
   margin-top: 10px;
 }
+
+label:nth-child(4) {
+  float: left;
+}
 input {
   display: block;
   width: 200px;

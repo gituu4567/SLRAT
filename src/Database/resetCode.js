@@ -33,8 +33,7 @@ function changePassword (contact, password) {
     return r.db('SLRAT').table('users').get(doc.id).update({password}).run(this.connection)
   })
   .then((result) => {
-    if (result.replaced === 1) return Promise.resolve(true)
-    return Promise.reject('password not updated')
+    return Promise.resolve(true)
   })
   .catch((error) => {
     if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('contact is not registered'))

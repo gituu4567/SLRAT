@@ -14,28 +14,69 @@ module.exports = function (server) {
       simple: false,
       resolveWithFullResponse: true
     }
-
-    it('should respond 401 if no contact is matched', () => {
-      resetReq.form = { contact: 'wrong@email.com' }
+    it('should respond 401 if contact or password is missing', () => {
       return request(resetReq)
       .then((response) => {
         assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Please complete all the forms')
       })
     })
 
-    it('should respond 200 on successful reset request', () => {
-      resetReq.form = { contact: scenarios.user.credential.contact }
+    it('should respond 401 if verificationCode is missing', () => {
+      resetReq.form = {
+        contact: scenarios.user.credential.contact,
+        password: scenarios.user.credential.password
+      }
+
+      return request(resetReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Please provide your verification code')
+      })
+    })
+
+    it('should respond 401 if verificationCode is invalid', () => {
+      resetReq.form.verificationCode = 'fakecode'
+
+      return request(resetReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
+      })
+    })
+
+    it('should respond 401 if verificationCode is valid but contact is unmatched', () => {
+      resetReq.form.contact = 'iam@bad.com'
+
+      return server.generateVerificationCode(scenarios.user.credential.contact)
+      .then((code) => {
+        resetReq.form.verificationCode = code
+        return request(resetReq)
+      })
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
+      })
+    })
+
+    it('should respond 200 on successful password reset', () => {
+      resetReq.form.contact = scenarios.user.credential.contact
+      resetReq.form.password = 'newpassword'
+      scenarios.user.credential.newPassword = 'newpassword'
+
       return request(resetReq)
       .then((response) => {
         assert.equal(response.statusCode, 200)
+        assert.equal(response.body, 'Your password has been changed')
       })
     })
 
-    it('should have sent an reset code to contact', () => {
-      let lastCallArgs = server.sendReset.args[0]
-      assert.equal(lastCallArgs[0], scenarios.user.credential.contact)
-      assert(lastCallArgs[1])
-      scenarios.resetCode = lastCallArgs[1]
+    it('should not be able to reuse verification code', () => {
+      return request(resetReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Your verification code is invalid')
+      })
     })
   })
 }
