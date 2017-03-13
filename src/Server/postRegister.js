@@ -23,7 +23,6 @@ function postRegister (request, response) {
   .catch((error) => {
     if (error.message === 'invalid verification code') return response.status(401).send('Your verification code is invalid')
     if (error.message === 'Your verification code is invalid') return response.status(401).send(error.message)
-    console.log(error);
     response.status(500).send(error.message)
   })
 }

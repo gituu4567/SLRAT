@@ -12,11 +12,9 @@ let config = {
   },
   token: {
     secret: 'token is short'
-  },
-  mailer: {
-    transport: 'smtps://username:password@smtp.server.com',
-    sender: '"name" <sender@server.com>',
-    hostname: 'http://service.com'
   }
+  // NOTE: stubbed using sinon:
+  // Email:{},
+  // SMS:{}
 }
 module.exports = config

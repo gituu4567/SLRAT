@@ -8,11 +8,11 @@
       <form target="_self" method="post">
         <label>Contact: <input autoComplete="false" type="text" name="contact" /> </label>
         <label>Verification Code: <input autoComplete="off" type="text" name="verificationCode" /> </label>
-        <input type="submit" name="Send" value="Send" formmethod="get" formaction="/sendVerification" formtarget="response" onclick="disableSend()" />
+        <input type="submit" name="Send" value="Send" formmethod="get" formaction="/verification" formtarget="response" onclick="disableSend()" />
 
         <label>New Password: <input autoComplete="off" type="password" name="password" /> </label>
         <input type="submit" value="Reset Password" />
-        <input type="text" name="action" value="register" style="display:none">
+        <input type="text" name="action" value="reset" style="display:none">
       </form>
       <iframe name="response"></iframe>
       <script>

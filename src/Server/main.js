@@ -3,7 +3,8 @@ const session = require('express-session')
 const formParser = require('body-parser').urlencoded({ extended: false })
 const path = require('path')
 
-var nodemailer = require('nodemailer')
+const Email = require('../Email/main.js')
+const SMS = require('../SMS/main.js')
 
 const Database = require('../Database/main.js')
 const getVerification = require('./getVerification.js')
@@ -35,9 +36,8 @@ class Server extends Database {
     this.connectDatbase = super.connect
     this.initDatabse = super.init
 
-    this.transport = nodemailer.createTransport(config.mailer.transport)
-    this.sender = config.mailer.sender
-    this.hostname = config.mailer.hostname
+    this.sendEmailVerification = (config.sendEmailVerification) ? Email(config.Email) : Promise.resolve(true)
+    this.sendSMSVerification = (config.sendSMSVerification) ? SMS(config.SMS) : Promise.resolve(true)
   }
 
   init () {
@@ -88,10 +88,6 @@ class Server extends Database {
         resolve(info)
       })
     })
-  }
-
-  sendSMSVerification (code, contact) {
-    return Promise.resolve(true)
   }
 
   start () {
