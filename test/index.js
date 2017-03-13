@@ -34,6 +34,7 @@ describe('Database', () => {
     })
   })
 
+  require('./Database/whiteListed.js')
   require('./Database/createUser.js')
   require('./Database/verification.js')
   require('./Database/authenticateUser.js')
