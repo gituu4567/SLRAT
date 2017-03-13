@@ -73,21 +73,13 @@ class Server extends Database {
     })
   }
 
-  sendEmailVerification () {
-    return Promise.resolve(true)
-  }
-
-  sendSMSVerification () {
-    return Promise.resolve(true)
-  }
-
-  sendActivation (address, code) {
+  sendEmailVerification (code, contact) {
     let mailOptions = {
       from: this.sender,
-      to: address,
-      subject: 'Account Activation',
-      text: `please visit this address ${this.hostname}/activate?code=${code}`,
-      html: `<b>please visit this address <a href=${this.hostname}/activate?code=${code}>${this.hostname}/activate?code=${code}</a></b>`
+      to: contact,
+      subject: 'Your Verification Code',
+      text: `This is your verification code ${code}`,
+      html: `This is your verification code <b>${code}</b>`
     }
 
     return new Promise((resolve, reject) => {
@@ -98,21 +90,8 @@ class Server extends Database {
     })
   }
 
-  sendReset (address, code) {
-    let mailOptions = {
-      from: this.sender,
-      to: address,
-      subject: 'Password Reset',
-      text: `please visit this address http://${this.hostname}/newpassword?code=${code}`,
-      html: `<b>please visit this address <a href=${this.hostname}/newpassword?code=${code}>http://${this.hostname}/newpassword?code=${code}</a></b>`
-    }
-
-    return new Promise((resolve, reject) => {
-      this.transport.sendMail(mailOptions, (error, info) => {
-        if (error) reject(error)
-        resolve(info)
-      })
-    })
+  sendSMSVerification (code, contact) {
+    return Promise.resolve(true)
   }
 
   start () {

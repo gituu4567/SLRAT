@@ -1,5 +1,3 @@
-const path = require('path')
-
 const SLRAT = require('./Server/main.js')
 
 const config = {
@@ -19,9 +17,7 @@ const config = {
   mailer: {
     transport: 'smtps://newsjianbo:slratapp2017@smtp.163.com',
     sender: '"newsjianbo" <newsjianbo@163.com>',
-    hostname: 'http://slrat.jianbo.online',
-    activationTemplate: path.resolve(__dirname, '../template/activationTemplate.html'),
-    resetTemplate: path.resolve(__dirname, '../template/resetTemplate.html')
+    hostname: 'http://slrat.jianbo.online'
   }
 }
 
