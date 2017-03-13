@@ -1,8 +1,16 @@
 var r = require('rethinkdb')
 
 class Database {
-  constructor (config) {
+  constructor (config, whitelist) {
     this.address = config.address
+    this.whiteListed = (whitelist) ? require('./whiteListed.js').bind(this) : () => Promise.resolve(true)
+    this.generateVerificationCode = require('./verification.js').generateVerificationCode.bind(this)
+    this.verifyCode = require('./verification.js').verifyCode.bind(this)
+    this.createUser = require('./authenticateUser.js').createUser.bind(this)
+    this.authenticate = require('./authenticateUser.js').authenticate.bind(this)
+    this.storeAuthCode = require('./authCode.js').storeAuthCode.bind(this)
+    this.verifyAuthCode = require('./authCode.js').verifyAuthCode.bind(this)
+    this.changePassword = require('./changePassword.js').bind(this)
   }
 
   connect () {
@@ -18,6 +26,9 @@ class Database {
   init () {
     return r.dbCreate('SLRAT').run(this.connection)
     .then(() => {
+      return r.db('SLRAT').tableCreate('whitelist').run(this.connection)
+    })
+    .then(() => {
       return r.db('SLRAT').tableCreate('users').run(this.connection)
     })
     .then(() => {
@@ -27,12 +38,6 @@ class Database {
       return r.db('SLRAT').tableCreate('authcodes').run(this.connection)
     })
     .then(() => {
-      return r.db('SLRAT').tableCreate('activationcodes').run(this.connection)
-    })
-    .then(() => {
-      return r.db('SLRAT').tableCreate('resetcodes').run(this.connection)
-    })
-    .then(() => {
       return Promise.resolve(true)
     })
     .catch((error) => {
@@ -40,49 +45,6 @@ class Database {
       return Promise.reject(error)
     })
   }
-
-  exec (query) {
-    return new Promise((resolve, reject) => {
-      this.database.exec(query, (err) => {
-        if (!err) resolve(true)
-        if (err) reject(err)
-      })
-    })
-  }
-
-  get (query) {
-    return new Promise((resolve, reject) => {
-      this.database.get(query, (error, row) => {
-        if (!error) resolve(row)
-        if (error) reject(error)
-      })
-    })
-  }
-
-  close (cb) {
-    this.database.close(cb)
-  }
 }
-
-Database.prototype.addValidUser = require('./validateUser.js').addValidUser
-Database.prototype.allowThisUser = require('./validateUser.js').allowThisUser
-
-Database.prototype.generateVerificationCode = require('./verification.js').generateVerificationCode
-Database.prototype.verifyCode = require('./verification.js').verifyCode
-
-Database.prototype.storeActivationCode = require('./activation.js').storeActivationCode
-Database.prototype.verifyActivation = require('./activation.js').verifyActivation
-
-Database.prototype.createUser = require('./authenticateUser.js').createUser
-Database.prototype.activateUser = require('./authenticateUser.js').activateUser
-Database.prototype.authenticate = require('./authenticateUser.js').authenticate
-Database.prototype.validateContact = require('./authenticateUser.js').validateContact
-
-Database.prototype.storeAuthCode = require('./authCode.js').storeAuthCode
-Database.prototype.verifyAuthCode = require('./authCode.js').verifyAuthCode
-
-Database.prototype.storeResetCode = require('./resetCode.js').storeResetCode
-Database.prototype.verifyResetCode = require('./resetCode.js').verifyResetCode
-Database.prototype.changePassword = require('./resetCode.js').changePassword
 
 module.exports = Database

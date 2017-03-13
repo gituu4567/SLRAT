@@ -26,26 +26,4 @@ function authenticate (credential) {
   })
 }
 
-function activateUser (contact) {
-  return r.db('SLRAT').table('users').filter({contact})(0).update({active: true}).run(this.connection)
-  .then((result) => {
-    if (result.replaced === 1) return Promise.resolve(true)
-    return Promise.reject(false)
-  })
-  .catch((error) => {
-    return Promise.reject(error)
-  })
-}
-
-function validateContact (contact) {
-  return r.db('SLRAT').table('users').filter({contact})(0).run(this.connection)
-  .then((doc) => {
-    return Promise.resolve(contact)
-  })
-  .catch((error) => {
-    if (error.msg === 'Index out of bounds: 0') return Promise.reject(new Error('contact is not registered'))
-    return Promise.reject(error)
-  })
-}
-
-module.exports = {createUser, activateUser, authenticate, validateContact}
+module.exports = {createUser, authenticate}

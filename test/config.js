@@ -1,4 +1,5 @@
 let config = {
+  whitelist: true,
   database: {
     address: 'rethinkdb'
   },

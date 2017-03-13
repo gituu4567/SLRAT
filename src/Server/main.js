@@ -11,15 +11,13 @@ const getVerification = require('./getVerification.js')
 const getRoot = require('./getRoot.js')
 const postLogin = require('./postLogin.js')
 const postRegister = require('./postRegister.js')
-const getActivate = require('./getActivate.js')
 const getAuthorization = require('./getAuthorization.js')
 const postToken = require('./postToken.js')
-const postNewPassword = require('./postNewPassword.js')
 const postReset = require('./postReset.js')
 
 class Server extends Database {
   constructor (config) {
-    super(config.database)
+    super(config.database, config.whitelist)
 
     this.config = config.server
     this.publicDir = config.server.publicDir || path.resolve(__dirname, '../../public/')
@@ -58,10 +56,8 @@ class Server extends Database {
       this.endPoints.get('/verification', getVerification.bind(this))
       this.endPoints.post('/login', formParser, postLogin.bind(this))
       this.endPoints.post('/register', formParser, postRegister.bind(this))
-      this.endPoints.get('/activate', formParser, getActivate.bind(this))
       this.endPoints.get('/authorization', getAuthorization.bind(this))
       this.endPoints.post('/token', postToken.bind(this))
-      this.endPoints.post('/newpassword', formParser, postNewPassword.bind(this))
       this.endPoints.post('/reset', formParser, postReset.bind(this))
 
       this.endPoints.use(express.static(this.publicDir, {extensions: ['html']}))

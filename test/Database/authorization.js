@@ -39,7 +39,7 @@ describe('authorization', () => {
     })
   })
 
-  it('should delete this code right after', () => {
+  it('verifyAuthCode() should delete this code right after', () => {
     return database.verifyAuthCode(code)
     .then(() => {
       assert(false)

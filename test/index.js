@@ -27,18 +27,16 @@ describe('Database', () => {
   it('init should create necessary tables', () => {
     return r.db('SLRAT').tableList().run(database.connection)
     .then((tables) => {
+      assert(tables.find((v) => v === 'whitelist'))
       assert(tables.find((v) => v === 'users'))
-      assert(tables.find((v) => v === 'activationcodes'))
-      assert(tables.find((v) => v === 'authcodes'))
-      assert(tables.find((v) => v === 'resetcodes'))
       assert(tables.find((v) => v === 'verification'))
+      assert(tables.find((v) => v === 'authcodes'))
     })
   })
 
   require('./Database/createUser.js')
   require('./Database/verification.js')
   require('./Database/authenticateUser.js')
-  require('./Database/activation.js')
   require('./Database/authorization.js')
   require('./Database/reset.js')
 
@@ -77,21 +75,19 @@ describe('Server', () => {
   it('should create necessary tables', () => {
     return r.db('SLRAT').tableList().run(server.connection)
     .then((tables) => {
+      assert(tables.find((v) => v === 'whitelist'))
       assert(tables.find((v) => v === 'users'))
-      assert(tables.find((v) => v === 'activationcodes'))
+      assert(tables.find((v) => v === 'verification'))
       assert(tables.find((v) => v === 'authcodes'))
-      assert(tables.find((v) => v === 'resetcodes'))
     })
   })
 
   require('./Server/getVerification.js')(server)
   require('./Server/postRegister.js')(server)
-  // require('./Server/getActivate.js')
   require('./Server/postLogin.js')
   require('./Server/getAuthorization.js')
   require('./Server/postToken.js')
   require('./Server/postReset.js')(server)
-  // require('./Server/postNewPassword.js')
   require('./Server/getRoot.js')
 
   after((done) => {

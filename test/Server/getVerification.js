@@ -41,11 +41,22 @@ module.exports = function getVerification (server) {
       })
     })
 
+    it('should respond 401 when contact is not on whitelist', () => {
+      verificationReq.qs.action = 'register'
+      return request(verificationReq)
+      .then((response) => {
+        assert.equal(response.statusCode, 401)
+        assert.equal(response.body, 'Sorry, you are not allowed to use our services')
+      })
+    })
+
     it('should respond 200 when verify register with a new SMS contact', () => {
       verificationReq.qs.contact = '18888888888'
       verificationReq.qs.action = 'register'
-
-      return request(verificationReq)
+      return r.db('SLRAT').table('whitelist').insert({contact: verificationReq.qs.contact}).run(server.connection)
+      .then(() => {
+        return request(verificationReq)
+      })
       .then((response) => {
         assert.equal(response.statusCode, 200)
       })
@@ -61,7 +72,10 @@ module.exports = function getVerification (server) {
     it('should respond 200 when verify register with a new email contact', () => {
       verificationReq.qs.contact = scenarios.user.credential.contact
 
-      return request(verificationReq)
+      return r.db('SLRAT').table('whitelist').insert({contact: verificationReq.qs.contact}).run(server.connection)
+      .then(() => {
+        return request(verificationReq)
+      })
       .then((response) => {
         assert.equal(response.statusCode, 200)
       })
