@@ -34,8 +34,8 @@ class Server extends Database {
     this.connectDatbase = super.connect
     this.initDatabse = super.init
 
-    this.sendEmailVerification = (config.sendEmailVerification) ? Email(config.Email) : Promise.resolve(true)
-    this.sendSMSVerification = (config.sendSMSVerification) ? SMS(config.SMS) : Promise.resolve(true)
+    this.sendEmailVerification = (config.Email) ? Email(config.Email) : config.sendEmailVerification
+    this.sendSMSVerification = (config.SMS) ? SMS(config.SMS) : config.sendSMSVerification
   }
 
   init () {
