@@ -42,7 +42,7 @@ module.exports = function getVerification (server) {
     })
 
     it('should respond 401 when contact is not on whitelist', () => {
-      verificationReq.qs.action = 'register'
+      verificationReq.qs.action = 'signup'
       return request(verificationReq)
       .then((response) => {
         assert.equal(response.statusCode, 401)
@@ -50,9 +50,9 @@ module.exports = function getVerification (server) {
       })
     })
 
-    it('should respond 200 when verify register with a new SMS contact', () => {
+    it('should respond 200 when verify signup with a new SMS contact', () => {
       verificationReq.qs.contact = '18888888888'
-      verificationReq.qs.action = 'register'
+      verificationReq.qs.action = 'signup'
       return r.db('SLRAT').table('whitelist').insert({contact: verificationReq.qs.contact}).run(server.connection)
       .then(() => {
         return request(verificationReq)
@@ -69,7 +69,7 @@ module.exports = function getVerification (server) {
       assert(server.sendSMSVerification.called)
     })
 
-    it('should respond 200 when verify register with a new email contact', () => {
+    it('should respond 200 when verify signup with a new email contact', () => {
       verificationReq.qs.contact = scenarios.user.credential.contact
 
       return r.db('SLRAT').table('whitelist').insert({contact: verificationReq.qs.contact}).run(server.connection)
@@ -89,21 +89,21 @@ module.exports = function getVerification (server) {
       scenarios.verificationCode = server.sendEmailVerification.args[0][0]
     })
 
-    it('should respond 401 when verify register action with a registered contact', () => {
+    it('should respond 401 when verify signup action with a signuped contact', () => {
       return server.createUser(scenarios.user.credential)
       .then(() => {
         return request(verificationReq)
       })
       .then((response) => {
         assert.equal(response.statusCode, 401)
-        assert.equal(response.body, 'you have already registered')
+        assert.equal(response.body, 'you have already signuped')
       })
       .catch((error) => {
         throw new Error(error)
       })
     })
 
-    it('should respond 200 when verify reset with a registered contact', () => {
+    it('should respond 200 when verify reset with a signuped contact', () => {
       verificationReq.qs.action = 'reset'
       return request(verificationReq)
       .then((response) => {
@@ -114,7 +114,7 @@ module.exports = function getVerification (server) {
       })
     })
 
-    it('should respond 401 when verify reset action with an un registered contact', () => {
+    it('should respond 401 when verify reset action with an un signuped contact', () => {
       return r.db('SLRAT').table('users')(0).run(server.connection)
       .then((result) => {
         return r.db('SLRAT').table('users').get(result.id).delete().run(server.connection)
@@ -125,7 +125,7 @@ module.exports = function getVerification (server) {
       })
       .then((response) => {
         assert.equal(response.statusCode, 401)
-        assert.equal(response.body, 'you have not yet registered')
+        assert.equal(response.body, 'you have not yet signuped')
       })
       .catch((error) => {
         throw new Error(error)

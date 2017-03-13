@@ -12,10 +12,10 @@ function getVerification (request, response) {
     return r.db('SLRAT').table('users')('contact').count(contact).run(this.connection)
   })
   .then((result) => {
-    if (action === 'register' && result === 0) return Promise.resolve()
-    if (action === 'register') return Promise.reject(new Error('you have already registered'))
+    if (action === 'signup' && result === 0) return Promise.resolve()
+    if (action === 'signup') return Promise.reject(new Error('you have already signuped'))
     if (action === 'reset' && result === 1) return Promise.resolve()
-    if (action === 'reset') return Promise.reject(new Error('you have not yet registered'))
+    if (action === 'reset') return Promise.reject(new Error('you have not yet signuped'))
     return Promise.reject(new Error('unclear action'))
   })
   .then(() => {
@@ -29,8 +29,8 @@ function getVerification (request, response) {
     return response.status(200).send('verification code sent')
   })
   .catch((error) => {
-    if (error.message === 'you have already registered') return response.status(401).send(error.message)
-    if (error.message === 'you have not yet registered') return response.status(401).send(error.message)
+    if (error.message === 'you have already signuped') return response.status(401).send(error.message)
+    if (error.message === 'you have not yet signuped') return response.status(401).send(error.message)
     if (error.message === 'contact not found in whitelist') return response.status(401).send('Sorry, you are not allowed to use our services')
     return response.status(500).send(error.message)
   })

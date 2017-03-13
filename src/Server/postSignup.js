@@ -1,6 +1,6 @@
 const r = require('rethinkdb')
 
-function postRegister (request, response) {
+function postSignup (request, response) {
   let verificationCode = request.body.verificationCode
   let contact = request.body.contact
   let password = request.body.password
@@ -27,4 +27,4 @@ function postRegister (request, response) {
   })
 }
 
-module.exports = postRegister
+module.exports = postSignup
