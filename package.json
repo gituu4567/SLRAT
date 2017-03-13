@@ -1,23 +1,24 @@
 {
   "name": "SLRAT",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Signup, Login, Reset, Authroization, Token",
   "scripts": {
     "test": "mocha --inspect --watch ./test/index.js",
-    "debug": "mocha --inspect --debug-brk --watch ./test/index.js",
-    "cover": "babel-node ./node_modules/.bin/babel-istanbul cover _mocha -- ./test/index.js",
-    "build": "babel src -d dist"
+    "debug": "mocha --inspect --debug-brk --watch ./test/index.js"
   },
+  "files":[
+    "src/",
+    "public/"
+  ],
+  "main": "main.js",
   "author": "Liu Shuo",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^3.12.2",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.1.2",
-    "request": "^2.79.0",
-    "request-promise": "^4.1.1",
     "sinon": "^1.17.7"
   },
   "dependencies": {
@@ -27,6 +28,8 @@
     "jsonwebtoken": "^7.2.1",
     "nodemailer": "^2.7.2",
     "rethinkdb": "^2.3.3",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
     "session-file-store": "^1.0.0"
   }
 }
