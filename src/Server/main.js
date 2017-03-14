@@ -69,23 +69,6 @@ class Server extends Database {
     })
   }
 
-  sendEmailVerification (code, contact) {
-    let mailOptions = {
-      from: this.sender,
-      to: contact,
-      subject: 'Your Verification Code',
-      text: `This is your verification code ${code}`,
-      html: `This is your verification code <b>${code}</b>`
-    }
-
-    return new Promise((resolve, reject) => {
-      this.transport.sendMail(mailOptions, (error, info) => {
-        if (error) reject(error)
-        resolve(info)
-      })
-    })
-  }
-
   start () {
     return this.init()
     .then(() => {
